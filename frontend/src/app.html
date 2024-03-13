@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" href="%sveltekit.assets%/favicon.png" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		%sveltekit.head%
+	</head>
+	<body data-sveltekit-preload-data="hover">
+		<div style="display: contents">%sveltekit.body%</div>
+	</body>
+</html>
+
+<style>
+	@font-face {
+    font-family: 'GoodSans-RegularItalic';
+    src: url('../../assets/GTFGoodSansTRIAL-RegularItalic.otf') format('otf'),
+    /* Additional font properties can be specified here */
+  }
+  @font-face {
+    font-family: 'GoodSans-Regular';
+    src: url('../../assets/GTFGoodSansTRIAL-Regula.otf') format('otf'),
+    /* Additional font properties can be specified here */
+  }
+
+	:root {
+		--gutter: 12px;
+		--transition: all ease-in-out .6s;
+	}
+
+	body {
+		margin: 0;
+		font-family: 'GoodSans-Regular';
+		font-size: 14px;
+		line-height: 18px;
+		color: #000;
+		background-color: #F7F5E5;
+	}
+</style>
