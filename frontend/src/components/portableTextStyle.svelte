@@ -26,13 +26,15 @@
   <h4 class=""><slot /></h4>
 {/if}
 <style>
+  * {
+    max-width: 640px;
+  }
   p {
     margin-top: 36px;
-    margin-bottom: 0;
+    margin-bottom: 36px;
   }
   p.marginTop {
     margin-top: 0;
-    margin-bottom: 18px;
   }
   h1 {
     color: red;
@@ -47,6 +49,8 @@
     font-weight: 400;
   }
   h4 {
+    font-size: 18px;
+    line-height: 18px;
     text-transform: uppercase;
     font-weight: 400;
     margin: 0;

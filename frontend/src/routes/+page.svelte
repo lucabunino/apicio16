@@ -98,24 +98,25 @@
       <div class="swiper-button-next"></div> -->
       {/if}
       {#if block.menuTitle}
-        <h3 on:click={openMenu}>{block.menuTitle[lang]} <span class:open>↓</span></h3>
+        <h3 on:click={openMenu} class:open>{block.menuTitle[lang]} <span>↓</span></h3>
           <div class="menuContent">
-            <div class="menuContentDivider" class:open></div>
             {#if open}
-              <div class="menuContentChild" transition:slide={{duration: 400, easing: quadInOut}}>
-                <PortableText 
-                  value={block.menuContent[lang]}
-                  components={{
-                    block: {
-                      normal: portableTextStyle,
-                      h1: portableTextStyle,
-                      h2: portableTextStyle,
-                      h3: portableTextStyle,
-                      h4: portableTextStyle,
-                      h5: portableTextStyle,
-                    }
-                  }}
-                />
+              <div transition:slide={{duration: 200, easing: quadInOut}}>
+                <div class="menuContentChild">
+                  <PortableText 
+                    value={block.menuContent[lang]}
+                    components={{
+                      block: {
+                        normal: portableTextStyle,
+                        h1: portableTextStyle,
+                        h2: portableTextStyle,
+                        h3: portableTextStyle,
+                        h4: portableTextStyle,
+                        h5: portableTextStyle,
+                      }
+                    }}
+                  />
+                </div>
               </div>
             {/if}
           </div>
@@ -269,32 +270,28 @@
     cursor: pointer;
     font-size: 18px;
   }
-  h3:hover {
-    opacity: .7;
+  h3:hover, h3.open {
+    color: #F7F5E5;
   }
   h3>span {
     display: inline-block;
     transition: var(--transition);
+    transition-property: transform;
   }
-  h3>span.open {
+  h3.open>span {
     transform: rotate(180deg);
   }
   .menuContent {
     text-align: center;
   }
-  .menuContentDivider {
-    height: 1px;
-    background-color: #000;
-    width: 0;
-    transition: all ease-in-out .6s;
-  }
-  .menuContentDivider.open {
-    width: 100%;
-  }
   .menuContentChild {
+    border-top: solid 1px #000;
     margin: auto;
     padding: 40px 0;
     box-sizing: border-box;
+    line-height: 18px;
+    display: grid;
+    justify-content: center;
   }
   #preFooter {
     z-index: 2;

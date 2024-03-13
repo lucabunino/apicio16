@@ -49,6 +49,7 @@ export async function getMenu(): Promise<Settings[]> {
 							description,
 							price,
 							allergens[]->{
+								number,
 								title,
 								description
 							}

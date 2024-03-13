@@ -56,9 +56,9 @@
   }
 </script>
 
-{#if $navigating}
-    <div style="display:block; background-color:yellow; position:fixed; z-index:999; top:0; left:0; width:100%; height:100%">LOADERRRRRR</div>
-{/if}
+<!-- {#if $navigating}
+    <div style="display:block; background-color:yellow; position:fixed; z-index:999; top:0; left:0; width:100%; height:100%">LOADER</div>
+{/if} -->
 
 <header>
   {#if data.siteSettings[0].logo}
@@ -76,11 +76,18 @@
 </header>
 
 <slot></slot>
-<footer>
-  {#if isHomepage}
-    <a class="menuItem" target="" href="/menu">{#if lang == "en"}Today's menu{/if}{#if lang == "it"}Menu di oggi{/if}</a>
-  {:else if isMenu}
-    <a class="menuItem" target="" href="/">Back to website</a>
+
+<footer class:menu="{$page.url.pathname === "/menu"}">
+  {#if $page.url.pathname === "/"}
+    <a class="menuItem" target="" href="/menu">
+      {#if lang == "en"}Today's menu{/if}
+      {#if lang == "it"}Menu di oggi{/if}
+    </a>
+  {:else}
+    <a class="menuItem" target="" href="/">
+      {#if lang == "en"}Back to website{/if}
+      {#if lang == "it"}Torna al sito{/if}
+    </a>
   {/if}
   {#if data.siteSettings[0].mail}
     <a class="maps" target="_blank" href="{data.siteSettings[0].mapsLink}">{data.siteSettings[0].maps}</a>
@@ -102,11 +109,12 @@
     top: calc(var(--gutter)*3);
     width: 40vw;
     z-index: 1;
-    transition: width ease-in-out .4s, left ease-in-out .4s, opacity ease-in-out .1s;
+    transition: var(--transition);
   }
   .logo.menu {
     left: 40vw;
     width: 20vw;
+    position: absolute;
   }
   #languageSwitch {
     font-size: 12px;
@@ -151,6 +159,9 @@
     padding: calc(var(--gutter)*.75) calc(var(--gutter)*1.75);
     font-size: 12px;
     text-transform: uppercase;
+  }
+  footer.menu {
+    border-top: solid 1px #000;
   }
   footer > a, footer > div > a {
     color: #000;
