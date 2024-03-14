@@ -184,6 +184,7 @@
   }
   section.slider {
     height: 100vh;
+    background-color: #F7F5E5;
   }
   section.slider>picture>img {
     width: 50%;
@@ -299,6 +300,8 @@
     position: relative;
     width: 100%;
     z-index: 2;
+    background-color: #F7F5E5;
+    padding-bottom: 56px;
   }
   #preFooter>div,
   #preFooter>div>picture {
@@ -364,7 +367,6 @@
   textarea{
     min-height: 150px;
     resize: none;
-    margin-bottom: 56px;
   }
   textarea:focus, input:focus{
     outline: none;
@@ -384,5 +386,6 @@
     right: calc(var(--gutter)*1.75);
     bottom: 0%;
     cursor: pointer;
+    margin-bottom: 56px;
   }
 </style>

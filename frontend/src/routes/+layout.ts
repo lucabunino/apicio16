@@ -12,10 +12,12 @@ export const load:any = (async ({ url }) => {
   if (siteSettings) {
 		return {
 			siteSettings,
+      pathname
 		};
 	}
   throw error(404, 'Not found');
 }) satisfies PageLoad;
+
 
 // export const load:any = (async () => {
 // 	const siteSettings = await getSiteSettings();

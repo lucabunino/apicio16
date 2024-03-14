@@ -2,34 +2,25 @@
   import type { PageData } from './$types';
   import { slide } from 'svelte/transition';
   import { quadInOut } from 'svelte/easing';
+  import { quartInOut } from 'svelte/easing';
   import { onMount } from 'svelte';
 	import { onDestroy } from 'svelte';
+  import { beforeNavigate, afterNavigate } from '$app/navigation';
 
   let ready = false;
-  let ready2 = false;
   onMount(() => ready = true);
-	onDestroy(() => ready = true);
-
-  function bgEnter(node, { delay, duration }) {
-		return {
-			delay,
-			duration,
-			css: (t) => {
-				const eased = quadInOut(t);
-				return `
-          transform: translateY(${(1 - t) * 100}%);
-				`;
-			}
-		};
-	}
+	onDestroy(() => ready = false);
+  beforeNavigate(() => {
+		ready = false;
+	});
   function menuEnter(node, { delay, duration }) {
 		return {
 			delay,
 			duration,
 			css: (t) => {
-				const eased = quadInOut(t);
+				const eased = quartInOut(t);
 				return `
-          transform: translateY(${(1 - t) * innerHeight}px);
+          transform: translateY(${(1 - eased) * innerHeight}px);
 				`;
 			}
 		};
@@ -39,9 +30,9 @@
 			delay,
 			duration,
 			css: (t) => {
-				const eased = quadInOut(t);
+				const eased = quartInOut(t);
 				return `
-          transform: translateY(${(1 - t) * 100}%);
+          transform: translateY(-${(1 - eased) * innerHeight}px);
 				`;
 			}
 		};
@@ -129,13 +120,13 @@
 <svelte:window bind:innerWidth bind:innerHeight on:resize={calculate}/>
 
 {#if ready}
-  <div id="bg" in:bgEnter={{duration: 400}}></div>
+  <!-- <div id="bg" in:bgEnter={{duration: 1000}}></div> -->
 {/if}
 <div id="meals">
   {#each data.menu[0].menuContents as content, i (content)}
     {#if ready}
-      <section class="meal" in:menuEnter={{delay: i*100, duration: 400}}>
-          <div on:click={openMeal(content)} style:height={`${(innerHeight - (gutter*6 + innerWidth/100*8) - 37)/data.menu[0].menuContents.length}px`}>
+      <section class="meal" in:menuEnter={{delay: 800 + i*50, duration: 1000}} out:menuLeave={{delay: i*50, duration: 800}}>
+          <div on:click={openMeal(content)} style:height={`${(innerHeight - (gutter*6 + innerWidth/100*8) - 37 - data.menu[0].menuContents.length)/data.menu[0].menuContents.length}px`}>
             <h2 class={open == content ? 'open' : ''} >{content.meal[lang]} <span>↓</span></h2>
           </div>
           {#if open === content}
@@ -189,12 +180,16 @@
   }
   #meals {
     padding-top: calc(var(--gutter)*6 + 8vw);
-    margin-bottom: 37px;
   }
   .meal {
     display: grid;
     border-top: solid 1px #000;
     position: relative;
+  }
+  .meal:last-of-type {
+    border-bottom: solid 1px #000;
+    margin-bottom: 36px;
+    box-sizing: border-box;
   }
   .meal>div{
     align-items: center;

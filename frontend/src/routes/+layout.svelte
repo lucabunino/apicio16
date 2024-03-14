@@ -1,10 +1,85 @@
 <script lang="ts">
   import type { PageData } from './$types';
   import { onMount } from 'svelte';
-  import { page } from '$app/stores';
-  
-  import { navigating } from '$app/stores';
-  $: if($navigating) checkPage();
+  import { page, navigating } from '$app/stores';
+  import { quartInOut } from 'svelte/easing';
+  import Loader from '../components/loader.svelte'; // Or whatever your component path is
+	import { beforeNavigate, afterNavigate } from '$app/navigation';
+
+  $: scrollY = ""
+	$: isLoading = false;
+  $: delayed = false;
+  $: noTransition = false;
+  $: resizeTimeout = "";
+
+  beforeNavigate(() => {
+    if ($page.url.pathname === "/menu") {
+      delayed = false;
+    } else {
+      delayed = true;
+    }
+	});
+
+  function handleResize() {
+		noTransition = true; // Set noTransition to true on resize
+    clearTimeout(resizeTimeout); // Clear any existing timeout
+    resizeTimeout = setTimeout(() => {
+      noTransition = false; // Set noTransition back to false after a delay
+    }, 200); // Adjust the delay time as needed
+	}
+  function loaderEnter(node, { delay, duration}) {
+		return {
+			delay,
+			duration,
+			css: (t) => {
+				const eased = quartInOut(t);
+				return `
+          // transform-origin: left;
+          // transform: scaleX(${1 - eased});
+				`;
+			}
+		};
+	}
+  function loaderLeave(node, { delay, duration}) {
+		return {
+			delay,
+			duration,
+			css: (t) => {
+				const eased = quartInOut(t);
+				return `
+          transform: scaleX(${eased});
+				`;
+			}
+		};
+	}
+  function pageEnter(node, { delay, duration, offset=window.scrollY}) {
+		return {
+			delay,
+			duration,
+			css: (t) => {
+				const eased = quartInOut(t);
+				return `
+          opacity: ${eased};
+          // transform: translateY(${(1 - eased) * innerHeight}px);
+				`;
+			}
+		};
+	}
+  function pageLeave(node, { delay, duration, offset=window.scrollY}) {
+		return {
+			delay,
+			duration,
+			css: (t) => {
+				const eased = quartInOut(t);
+				return `
+          // padding-top: ${(1 - eased) * innerHeight}px;
+          // transform: translateY(.${offset*(1-eased)}px);
+          opacity: ${eased};
+          margin-top: -${offset}px;
+				`;
+			}
+		};
+	}
 
   import { language } from "./language";
   let lang: string;
@@ -13,21 +88,12 @@
 	});
 
   export let data: PageData;
-  $: logoColor=""
   let svgContentYellow = data.siteSettings[0].logo.replace('<svg', '<svg fill="#FFAF22" display="block"');
   let svgContentBlack = data.siteSettings[0].logo.replace('<svg', '<svg fill="#000" display="block"');
 
-  let isHomepage = true;
-  let isMenu = true;
-
   onMount(() => {
-    checkPage()
     checkLanguage()
   });
-
-  function checkPage() {
-    console.log("navigating");
-  }
 
   function checkLanguage() {
     // Check if userLanguage is stored in localStorage
@@ -56,18 +122,15 @@
   }
 </script>
 
-<!-- {#if $navigating}
-    <div style="display:block; background-color:yellow; position:fixed; z-index:999; top:0; left:0; width:100%; height:100%">LOADER</div>
-{/if} -->
+<svelte:window bind:scrollY={scrollY} on:resize={handleResize}/>
 
 <header>
   {#if data.siteSettings[0].logo}
-    <a class="logo" href="/" class:menu="{$page.url.pathname === "/menu"}">
-      {#if $page.url.pathname === "/"}
-        {@html svgContentYellow}
-      {:else}
-        {@html svgContentBlack}
-      {/if}
+    <a class="logo" href="/" aria-current={$page.url.pathname === '/'} class:off="{$page.url.pathname === "/menu"}" class:reset={$navigating} class:noTransition={noTransition} style={$page.url.pathname === "/menu" ? `transform: translateY(-${scrollY}px)` : ''}>
+      {@html svgContentYellow}
+    </a>
+    <a class="logo menu" href="/" aria-current={$page.url.pathname === '/about'} class:on="{$page.url.pathname === "/menu"}" class:reset={$navigating} class:noTransition={noTransition} style={$page.url.pathname === "/menu" ? `transform: translateY(-${scrollY}px)` : ''}>
+      {@html svgContentBlack}
     </a>
   {/if}
   <ul id="languageSwitch">
@@ -75,9 +138,18 @@
   </ul>
 </header>
 
-<slot></slot>
+{#key data.pathname}
+  <div style="overflow: hidden;" in:pageEnter={{ duration: 400, delay: delayed ? 800 : 1600 }} out:pageLeave={{ duration: 400, delay: delayed ? 0 : 800 }}>
+    <slot></slot>
+  </div>
+{/key}
 
 <footer class:menu="{$page.url.pathname === "/menu"}">
+  {#if $navigating}
+    <div id="loader" out:loaderLeave={{ duration: 800, delay: 800}}>
+      <Loader />
+    </div>
+  {/if}
   {#if $page.url.pathname === "/"}
     <a class="menuItem" target="" href="/menu">
       {#if lang == "en"}Today's menu{/if}
@@ -103,18 +175,63 @@
 </footer>
 
 <style lang="css">
+  #loader {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: -1;
+    transform-origin: right;
+  }
+  /* .loader {
+    background-color: #FFAF22;
+    position: absolute;
+    z-index: 999;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    animation: loaderAnimation 1s forwards;
+    animation-delay: 1s;
+  } */
+  @keyframes loaderAnimation {
+    0% {
+      transform: scaleX(0); /* Start with width 0 */
+    }
+    100% {
+      transform: scaleX(1); /* End with width 100% */
+    }
+  }
   .logo {
     position: fixed;
     left: 30vw;
     top: calc(var(--gutter)*3);
     width: 40vw;
     z-index: 1;
-    transition: var(--transition);
+    transition: opacity cubic-bezier( 0.770,  0.000,  0.175,  1.000 ) 400ms, left cubic-bezier( 0.770,  0.000,  0.175,  1.000 ) 800ms 800ms, width cubic-bezier( 0.770,  0.000,  0.175,  1.000 ) 800ms 800ms, transform cubic-bezier( 0.770,  0.000,  0.175,  1.000 ) 400ms;
+    opacity: 1;
   }
-  .logo.menu {
+  .logo.off {
     left: 40vw;
     width: 20vw;
-    position: absolute;
+    transition: opacity cubic-bezier( 0.770,  0.000,  0.175,  1.000 ) 400ms 1600ms, left cubic-bezier( 0.770,  0.000,  0.175,  1.000 ) 800ms 800ms, width cubic-bezier( 0.770,  0.000,  0.175,  1.000 ) 800ms 800ms;
+    opacity: 0;
+  }
+  .logo.menu {
+    transition: opacity cubic-bezier( 0.770,  0.000,  0.175,  1.000 ) 400ms 1600ms, left cubic-bezier( 0.770,  0.000,  0.175,  1.000 ) 800ms 800ms, width cubic-bezier( 0.770,  0.000,  0.175,  1.000 ) 800ms 800ms, transform cubic-bezier( 0.770,  0.000,  0.175,  1.000 ) 400ms;
+    opacity: 0;
+  }
+  .logo.menu.on {
+    transition: opacity cubic-bezier( 0.770,  0.000,  0.175,  1.000 ) 400ms, left cubic-bezier( 0.770,  0.000,  0.175,  1.000 ) 800ms 800ms, width cubic-bezier( 0.770,  0.000,  0.175,  1.000 ) 800ms 800ms;
+    left: 40vw;
+    width: 20vw;
+    opacity: 1;
+  }
+  .logo.noTransition,
+  .logo.menu.noTransition {
+    transition: none;
   }
   #languageSwitch {
     font-size: 12px;
@@ -161,7 +278,7 @@
     text-transform: uppercase;
   }
   footer.menu {
-    border-top: solid 1px #000;
+    /* border-top: solid 1px #000; */
   }
   footer > a, footer > div > a {
     color: #000;
