@@ -138,7 +138,6 @@
             <h2 class={open == content ? 'open' : ''} >{content.meal[lang]} <span>↓</span></h2>
           </div>
           {#if open === content}
-            <div class="menuContentDivider"></div>
             <div class="course" transition:slide={{duration: 200, easing: quadInOut}}>
               {#each content.mealContent as meal}
                 <h3 class={openDishes.has(meal) ? 'open' : ''} on:click={() => { toggleDish(meal); open == content; }}>{meal.course[lang]} <span>↓</span></h3>
@@ -251,7 +250,7 @@
     opacity: .7;
   }
   h3:first-of-type {
-    border:none;
+    /* border:none; */
   }
   .dishes {
     cursor: default;

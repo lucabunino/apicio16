@@ -377,7 +377,7 @@
     border-top: solid 1px #000;
     background-color: #F7F5E5;
     color: #000;
-    /* font-family: 'GoodSans-Regular'; */
+    font-family: 'GoodSans-Regular', Arial, Helvetica, sans-serif;
     font-weight: 400;
   }
   .textarea-container {
@@ -385,6 +385,7 @@
     width: 100%;
     border-top: solid 1px #000;
     background-color: #F7F5E5;
+    display: block;
   }
   textarea {
     max-width: 900px;
