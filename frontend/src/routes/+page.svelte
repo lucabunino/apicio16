@@ -158,9 +158,9 @@
         <input type="text" id="lname" name="lname" placeholder="Last name (required)" required>
         <input type="email" id="email" name="email" placeholder="E-mail (required)" required>
         <input type="tel" id="phone" name="phone" placeholder="Phone">
-        <div class="textarea-container">
+        <p class="textarea-container">
           <textarea type="text" id="message" name="message" placeholder="Message" maxlength="400"></textarea>
-        </div>
+        </p>
       </form>
     {:else if lang == "it"}
       <form action="">
