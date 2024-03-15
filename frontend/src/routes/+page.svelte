@@ -499,6 +499,7 @@
       right: unset;
       display: block;
       margin: auto;
+      margin-bottom: var(--gutter);
     }
   }
 </style>
