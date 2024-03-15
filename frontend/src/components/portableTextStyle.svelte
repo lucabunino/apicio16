@@ -30,11 +30,12 @@
     max-width: 640px;
   }
   p {
-    margin-top: 36px;
-    margin-bottom: 36px;
+    margin-top: 0;
+    margin-bottom: 0;
   }
   p.marginTop {
     margin-top: 0;
+    margin-bottom: 36px;
   }
   h1 {
     color: red;
@@ -54,5 +55,11 @@
     text-transform: uppercase;
     font-weight: 400;
     margin: 0;
+  }
+  @media only screen and (max-width: 600px) {
+    p {
+      font-size: 16px;
+      line-height: 18px;
+    }
   }
 </style>

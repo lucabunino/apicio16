@@ -1,13 +1,12 @@
 <script lang="ts">
   import type { PageData } from './$types';
-  import { onMount } from 'svelte';
+  import { onMount, afterUpdate, tick } from 'svelte';
   import { page, navigating } from '$app/stores';
   import { quartInOut } from 'svelte/easing';
   import Loader from '../components/loader.svelte'; // Or whatever your component path is
 	import { beforeNavigate, afterNavigate } from '$app/navigation';
 
   $: scrollY = ""
-	$: isLoading = false;
   $: delayed = false;
   $: noTransition = false;
   $: resizeTimeout = "";
@@ -92,9 +91,11 @@
   let svgContentBlack = data.siteSettings[0].logo.replace('<svg', '<svg fill="#000" display="block"');
 
   onMount(() => {
-    checkLanguage()
+    checkLanguage();
+    calculateFooterHeight();
   });
 
+  $: languageChecked = false;
   function checkLanguage() {
     // Check if userLanguage is stored in localStorage
     const storedLanguage = localStorage.getItem('userLanguage');
@@ -112,6 +113,7 @@
         language.set('it');
       }
     }
+    languageChecked = true
   }
 
   function changeLanguage(setLanguage) {
@@ -120,59 +122,77 @@
       language.set(setLanguage);
     }
   }
+
+  let footerHeightCurrent: number = undefined;
+  $: footerH = "";
+  import { footerHeight } from "./footerHeight";
+	footerHeight.subscribe((footerHeight) => {
+		footerH = footerHeight;
+	});
+  function calculateFooterHeight(event) {
+    footerHeight.set(footerHeightCurrent)
+	}
+  // Subscribe to footerHeight after each update to ensure it's set properly
+  afterUpdate(async () => {
+    await tick();
+    calculateFooterHeight();
+  });
 </script>
 
-<svelte:window bind:scrollY={scrollY} on:resize={handleResize}/>
+<svelte:window bind:scrollY={scrollY} on:resize={calculateFooterHeight, handleResize}/>
 
-<header>
-  {#if data.siteSettings[0].logo}
-    <a class="logo" href="/" aria-current={$page.url.pathname === '/'} class:off="{$page.url.pathname === "/menu"}" class:reset={$navigating} class:noTransition={noTransition} style={$page.url.pathname === "/menu" ? `transform: translateY(-${scrollY}px)` : ''}>
-      {@html svgContentYellow}
-    </a>
-    <a class="logo menu" href="/" aria-current={$page.url.pathname === '/about'} class:on="{$page.url.pathname === "/menu"}" class:reset={$navigating} class:noTransition={noTransition} style={$page.url.pathname === "/menu" ? `transform: translateY(-${scrollY}px)` : ''}>
-      {@html svgContentBlack}
-    </a>
-  {/if}
-  <ul id="languageSwitch">
-    <button class:active="{lang === 'it'}" on:click={() => changeLanguage('it')}>IT</button> / <button class:active="{lang === 'en'}" on:click={() => changeLanguage('en')}>EN</button>
-  </ul>
-</header>
+{#if languageChecked}
+  <header>
+    {#if data.siteSettings[0].logo}
+      <a class="logo" href="/" aria-current={$page.url.pathname === '/'} class:off="{$page.url.pathname === "/menu"}" class:reset={$navigating} class:noTransition={noTransition} style={$page.url.pathname === "/menu" ? `transform: translateY(-${scrollY}px)` : ''}>
+        {@html svgContentYellow}
+      </a>
+      <a class="logo menu" href="/" aria-current={$page.url.pathname === '/about'} class:on="{$page.url.pathname === "/menu"}" class:reset={$navigating} class:noTransition={noTransition} style={$page.url.pathname === "/menu" ? `transform: translateY(-${scrollY}px)` : ''}>
+        {@html svgContentBlack}
+      </a>
+    {/if}
+    <ul id="languageSwitch">
+      <button class:active="{lang === 'it'}" on:click={() => changeLanguage('it')}>IT</button> / <button class:active="{lang === 'en'}" on:click={() => changeLanguage('en')}>EN</button>
+    </ul>
+  </header>
 
-{#key data.pathname}
-  <div style="overflow: hidden;" in:pageEnter={{ duration: 400, delay: delayed ? 800 : 1600 }} out:pageLeave={{ duration: 400, delay: delayed ? 0 : 800 }}>
-    <slot></slot>
-  </div>
-{/key}
-
-<footer class:menu="{$page.url.pathname === "/menu"}">
-  {#if $navigating}
-    <div id="loader" out:loaderLeave={{ duration: 800, delay: 800}}>
-      <Loader />
+  {#key data.pathname}
+    <div style={`--footerHeight: ${footerH}px; overflow: hidden;`} in:pageEnter={{ duration: 400, delay: delayed ? 800 : 1600 }} out:pageLeave={{ duration: 400, delay: delayed ? 0 : 800 }}>
+      <slot></slot>
     </div>
-  {/if}
-  {#if $page.url.pathname === "/"}
-    <a class="menuItem" target="" href="/menu">
-      {#if lang == "en"}Today's menu{/if}
-      {#if lang == "it"}Menu di oggi{/if}
-    </a>
-  {:else}
-    <a class="menuItem" target="" href="/">
-      {#if lang == "en"}Back to website{/if}
-      {#if lang == "it"}Torna al sito{/if}
-    </a>
-  {/if}
-  {#if data.siteSettings[0].mail}
-    <a class="maps" target="_blank" href="{data.siteSettings[0].mapsLink}">{data.siteSettings[0].maps}</a>
-  {/if}
-  <div>
-    {#if data.siteSettings[0].facebook}
-      <a class="" target="_blank" href="{data.siteSettings[0].facebookLink}">{data.siteSettings[0].facebook}</a>
+  {/key}
+
+
+  <footer class:menu="{$page.url.pathname === "/menu"}" bind:clientHeight={footerHeightCurrent} on:loadeddata={calculateFooterHeight}>
+    {#if $navigating}
+      <div id="loader" out:loaderLeave={{ duration: 800, delay: 800}}>
+        <Loader />
+      </div>
     {/if}
-    {#if data.siteSettings[0].phone}
-      <a class="" target="_blank" href="callto:{data.siteSettings[0].phone}">{data.siteSettings[0].phone}</a>
+    {#if $page.url.pathname === "/"}
+      <a class="menuItem" target="" href="/menu">
+        {#if lang == "en"}Today's menu{/if}
+        {#if lang == "it"}Menu del giorno{/if}
+      </a>
+    {:else}
+      <a class="menuItem" target="" href="/">
+        {#if lang == "en"}Back to website{/if}
+        {#if lang == "it"}Torna al sito{/if}
+      </a>
     {/if}
-  </div>
-</footer>
+    {#if data.siteSettings[0].mail}
+      <a class="maps" target="_blank" href="{data.siteSettings[0].mapsLink}">{data.siteSettings[0].maps} <span>↗</span></a>
+    {/if}
+    <div>
+      {#if data.siteSettings[0].facebook}
+        <a class="" target="_blank" href="{data.siteSettings[0].facebookLink}">{data.siteSettings[0].facebook}</a>
+      {/if}
+      {#if data.siteSettings[0].phone}
+        <a class="" target="_blank" href="callto:{data.siteSettings[0].phone}">{data.siteSettings[0].phone}</a>
+      {/if}
+    </div>
+  </footer>
+{/if}
 
 <style lang="css">
   #loader {
@@ -185,17 +205,6 @@
     z-index: -1;
     transform-origin: right;
   }
-  /* .loader {
-    background-color: #FFAF22;
-    position: absolute;
-    z-index: 999;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    animation: loaderAnimation 1s forwards;
-    animation-delay: 1s;
-  } */
   @keyframes loaderAnimation {
     0% {
       transform: scaleX(0); /* Start with width 0 */
@@ -210,21 +219,21 @@
     top: calc(var(--gutter)*3);
     width: 40vw;
     z-index: 1;
-    transition: opacity cubic-bezier( 0.770,  0.000,  0.175,  1.000 ) 400ms, left cubic-bezier( 0.770,  0.000,  0.175,  1.000 ) 800ms 800ms, width cubic-bezier( 0.770,  0.000,  0.175,  1.000 ) 800ms 800ms, transform cubic-bezier( 0.770,  0.000,  0.175,  1.000 ) 400ms;
+    transition: opacity cubic-bezier( 0.770,  0.000,  0.175,  1.000 ) 400ms, left cubic-bezier( 0.770,  0.000,  0.175,  1.000 ) 800ms 800ms, top cubic-bezier( 0.770,  0.000,  0.175,  1.000 ) 800ms 800ms, width cubic-bezier( 0.770,  0.000,  0.175,  1.000 ) 800ms 800ms, transform cubic-bezier( 0.770,  0.000,  0.175,  1.000 ) 400ms;
     opacity: 1;
   }
   .logo.off {
     left: 40vw;
     width: 20vw;
-    transition: opacity cubic-bezier( 0.770,  0.000,  0.175,  1.000 ) 400ms 1600ms, left cubic-bezier( 0.770,  0.000,  0.175,  1.000 ) 800ms 800ms, width cubic-bezier( 0.770,  0.000,  0.175,  1.000 ) 800ms 800ms;
+    transition: opacity cubic-bezier( 0.770,  0.000,  0.175,  1.000 ) 400ms 1600ms, left cubic-bezier( 0.770,  0.000,  0.175,  1.000 ) 800ms 800ms, top cubic-bezier( 0.770,  0.000,  0.175,  1.000 ) 800ms 800ms, width cubic-bezier( 0.770,  0.000,  0.175,  1.000 ) 800ms 800ms;
     opacity: 0;
   }
   .logo.menu {
-    transition: opacity cubic-bezier( 0.770,  0.000,  0.175,  1.000 ) 400ms 1600ms, left cubic-bezier( 0.770,  0.000,  0.175,  1.000 ) 800ms 800ms, width cubic-bezier( 0.770,  0.000,  0.175,  1.000 ) 800ms 800ms, transform cubic-bezier( 0.770,  0.000,  0.175,  1.000 ) 400ms;
+    transition: opacity cubic-bezier( 0.770,  0.000,  0.175,  1.000 ) 400ms 1600ms, left cubic-bezier( 0.770,  0.000,  0.175,  1.000 ) 800ms 800ms, top cubic-bezier( 0.770,  0.000,  0.175,  1.000 ) 800ms 800ms, width cubic-bezier( 0.770,  0.000,  0.175,  1.000 ) 800ms 800ms, transform cubic-bezier( 0.770,  0.000,  0.175,  1.000 ) 400ms;
     opacity: 0;
   }
   .logo.menu.on {
-    transition: opacity cubic-bezier( 0.770,  0.000,  0.175,  1.000 ) 400ms, left cubic-bezier( 0.770,  0.000,  0.175,  1.000 ) 800ms 800ms, width cubic-bezier( 0.770,  0.000,  0.175,  1.000 ) 800ms 800ms;
+    transition: opacity cubic-bezier( 0.770,  0.000,  0.175,  1.000 ) 400ms, left cubic-bezier( 0.770,  0.000,  0.175,  1.000 ) 800ms 800ms, top cubic-bezier( 0.770,  0.000,  0.175,  1.000 ) 800ms 800ms, width cubic-bezier( 0.770,  0.000,  0.175,  1.000 ) 800ms 800ms;
     left: 40vw;
     width: 20vw;
     opacity: 1;
@@ -272,6 +281,7 @@
     width: calc(100% - var(--gutter)*1.75*2);
     z-index: 2;
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
     padding: calc(var(--gutter)*.75) calc(var(--gutter)*1.75);
     font-size: 12px;
@@ -295,7 +305,64 @@
     left: 50%;
     transform: translateX(-50%);
   }
-  a.maps::after{
-    content: " ↗";
+  span {
+    /* font-family: 'GoodSans-Regular'; */
+  }
+  
+  @media only screen and (max-width: 900px) {
+    footer {
+      justify-content: center;
+    }
+    a.maps {
+      margin-right: var(--gutter);
+    }
+    a.menuItem {
+      position: relative;
+      margin-bottom: 1em;
+      text-align: center;
+      left: unset;
+      transform: none;
+      width: 100%;
+    }
+  }
+  
+  @media only screen and (max-width: 600px) {
+    .logo {
+      top: calc(var(--gutter)*3.5);
+      width: 70vw;
+      left: 15vw;
+    }
+    .logo.off,
+    .logo.menu.on {
+      left: 21vw;
+      width: 58vw;
+      top: calc(var(--gutter)*2);
+    }
+    .logo.menu {
+      opacity: 0;
+    }
+    ul {
+      top: calc(var(--gutter)/2);
+      right: calc(var(--gutter)*1.5);
+    }
+    footer {
+      padding: calc(var(--gutter)*2) 0;
+      width: 100%;
+      flex-direction: column;
+      text-align: center;
+      align-items: center;
+      font-size: 13px;
+      line-height: 17px;
+    }
+    a.menuItem {
+      margin-bottom: 2em;
+    }
+  }
+
+  @media only screen and (max-width: 350px) {
+    footer > div {
+      flex-direction: column;
+      gap: 0;
+    }
   }
 </style>

@@ -33,23 +33,10 @@ export default {
               }
             },
             {
+              title: 'Testo',
               name: 'text',
-              type: 'object',
-              hidden: ({parent}) => !(parent?.kind === 'text'),
-              fields: [
-                {
-                  title: 'Italiano',
-                  name: 'it',
-                  type: 'text',
-                  rows: 3,
-                },
-                {
-                  title: 'Inglese',
-                  name: 'en',
-                  type: 'text',
-                  rows: 3,
-                },
-              ],          
+              type: 'localeText',
+              hidden: ({parent}) => !(parent?.kind === 'text'),         
             },
             {
               name: 'menuTitle',
@@ -93,7 +80,7 @@ export default {
             },
             {
               name: 'sliderImages',
-              title: 'Slider Images',
+              title: 'Immagini Slider',
               type: 'array',
               hidden: ({parent}) => !(parent?.kind === 'slider'),
               of: [
@@ -130,10 +117,18 @@ export default {
               ],
             },
             {
+              title: 'Immagine',
               name: 'image',
               type: 'image',
               fieldset: 'media',
               hidden: ({parent}) => !(parent?.kind === 'media' || parent?.kind === 'slider'),
+            },
+            {
+              title: 'Immagine Mobile',
+              name: 'imageMobile',
+              type: 'image',
+              fieldset: 'media',
+              hidden: ({parent}) => !(parent?.kind === 'media'),
             },
             {
               name: 'video',

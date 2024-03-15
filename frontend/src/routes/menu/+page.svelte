@@ -7,8 +7,18 @@
 	import { onDestroy } from 'svelte';
   import { beforeNavigate, afterNavigate } from '$app/navigation';
 
+  $: footerH = ""
+  import { footerHeight } from "../footerHeight";
+	footerHeight.subscribe((footerHeight) => {
+		footerH = footerHeight;
+	});
+  $: mealHeight = (innerHeight - (gutter*6 + innerWidth/100*8) - (footerH+1) - data.menu[0].menuContents.length)/data.menu[0].menuContents.length
+
   let ready = false;
-  onMount(() => ready = true);
+  onMount(() => {
+		ready = true;
+    footerHeight.set(footerH);
+	});
 	onDestroy(() => ready = false);
   beforeNavigate(() => {
 		ready = false;
@@ -32,13 +42,14 @@
 			css: (t) => {
 				const eased = quartInOut(t);
 				return `
-          transform: translateY(-${(1 - eased) * innerHeight}px);
+          transform: translateY(-${(1 - eased) * innerHeight * 1.1}px);
 				`;
 			}
 		};
 	}
 
   import { language } from "../language";
+    import Layout from '../+layout.svelte';
   let lang: string;
 	language.subscribe((language) => {
 		lang = language;
@@ -119,14 +130,11 @@
 
 <svelte:window bind:innerWidth bind:innerHeight on:resize={calculate}/>
 
-{#if ready}
-  <!-- <div id="bg" in:bgEnter={{duration: 1000}}></div> -->
-{/if}
 <div id="meals">
   {#each data.menu[0].menuContents as content, i (content)}
     {#if ready}
       <section class="meal" in:menuEnter={{delay: 800 + i*50, duration: 1000}} out:menuLeave={{delay: i*50, duration: 800}}>
-          <div on:click={openMeal(content)} style:height={`${(innerHeight - (gutter*6 + innerWidth/100*8) - 37 - data.menu[0].menuContents.length)/data.menu[0].menuContents.length}px`}>
+          <div on:click={openMeal(content)} style:height={innerWidth > 600 ? `${mealHeight}px` : '180px'}>
             <h2 class={open == content ? 'open' : ''} >{content.meal[lang]} <span>↓</span></h2>
           </div>
           {#if open === content}
@@ -139,13 +147,21 @@
                   <div class="dishes">
                     {#each meal.dishes as dish}
                       <div class="dish">
-                        <h4>{dish.dishReference.title[lang]}
-                          {#each dish.dishReference.allergens as allergene}
-                            <sup>{allergene.number}{#if dish.dishReference.allergens.indexOf(allergene) < dish.dishReference.allergens.length - 1}–{/if}</sup>
-                          {/each}
-                        </h4>
-                        <p class="dishDescription">{dish.dishReference.description[lang]}</p>
+                        {#if dish.dishReference.title[lang]}
+                          <h4>{dish.dishReference.title[lang]}
+                            {#if dish.dishReference.allergens.length > 0}
+                              {#each dish.dishReference.allergens as allergene}
+                                <sup>{allergene.number}{#if dish.dishReference.allergens.indexOf(allergene) < dish.dishReference.allergens.length - 1}–{/if}</sup>
+                              {/each}
+                            {/if}
+                          </h4>
+                        {/if}
+                        {#if dish.dishReference.description[lang]}
+                          <p class="dishDescription">{dish.dishReference.description[lang]}</p>
+                        {/if}
+                        {#if dish.dishReference.price}
                         <p class="dishPrice">€ {dish.dishReference.price}</p>
+                        {/if}
                       </div>
                     {/each}
                     {#if allAllergens}
@@ -188,7 +204,7 @@
   }
   .meal:last-of-type {
     border-bottom: solid 1px #000;
-    margin-bottom: 36px;
+    margin-bottom: var(--footerHeight);
     box-sizing: border-box;
   }
   .meal>div{
@@ -206,24 +222,22 @@
     display: inline-block;
     transition: var(--transition);
     transition-property: transform;
+    /* font-family: 'GoodSans-Regular'; */
   }
   h2.open>span,
   h3.open>span {
     transform: rotate(180deg);
+    /* font-family: 'GoodSans-Regular'; */
   }
   .meal>div:hover>h2,
   h2.open {
     color: #F7F5E5;
   }
   .course {
-    /* height: 0; */
-    /* overflow: hidden; */
     background-color: #F7F5E5;
   }
   .course:first-of-type {
     border-top: none;
-    /* height: 0; */
-    /* overflow: hidden; */
   }
   h3 {
     font-weight: 400;
@@ -241,7 +255,7 @@
   }
   .dishes {
     cursor: default;
-    padding: 57px 0 27px;
+    padding: 57px calc(var(--gutter)*2) 27px;
     border-top: solid 1px #000;
     text-align: center;
     display: grid;
@@ -282,23 +296,16 @@
     width: 100%;
     transition: all ease-in-out .6s;
   }
-</style>
 
-
-<!-- $: open = ""
-function openMeal(content) {
-  if (open === content) {
-    open = ""
-  } else {
-    open = content
+  @media only screen and (max-width: 600px) {
+    #meals {
+      padding-top: calc(var(--gutter)*6 + 16vw);
+    }
+    h3 {
+      padding: calc(var(--gutter)*3) calc(var(--gutter)*1.75)
+    }
+    .dishes {
+      padding: 36px calc(var(--gutter)*2) 18px;
+    }
   }
-  openDishes = new Set();
-}
-
-
-{#if !allergenNumbers.has(allergene.number)}
-  {(() => {
-    {allergenNumbers.add(allergene.number)}
-    return ''; // return empty string so Svelte does not print it
-  })()}
-{/if} -->
+</style>

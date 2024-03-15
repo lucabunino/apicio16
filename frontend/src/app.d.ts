@@ -10,4 +10,16 @@ declare global {
 	}
 }
 
-export {};
+import { getSiteSettings } from '$lib/utils/sanity';
+import { error } from '@sveltejs/kit';
+import type { PageLoad } from './$types';
+
+export const load:any = (async () => {
+	const siteSettings = await getSiteSettings();
+	if (siteSettings) {
+		return {
+			siteSettings,
+		};
+	}
+	throw error(404, 'Not found');
+}) satisfies PageLoad;

@@ -130,9 +130,17 @@
 <section id="preFooter">
   <div>
     {#if data.siteSettings[0].footerImage}
-      <picture>
+      <picture class="desktopOnly">
         <img
         src={urlFor(data.siteSettings[0].footerImage).url()}
+        alt="Outsides of Apicio16"
+        />
+      </picture>
+    {/if}
+    {#if data.siteSettings[0].footerImageMobile}
+      <picture class="mobileOnly">
+        <img
+        src={urlFor(data.siteSettings[0].footerImageMobile).url()}
         alt="Outsides of Apicio16"
         />
       </picture>
@@ -146,11 +154,13 @@
     <p>{#if lang == "en"}Get in touch with us by filling out the contact form, and we'll get back to you as soon as possible.{:else if lang == "it"}Mettiti in contatto con noi compilando il modulo di contatto e ti risponderemo il prima possibile.{/if}</p>
     {#if lang == "en"}
       <form action="">
-        <input type="text" id="fname" name="fname" placeholder="First name (required)">
-        <input type="text" id="lname" name="lname" placeholder="Last name (required)">
-        <input type="email" id="email" name="email" placeholder="E-mail (required)">
+        <input type="text" id="fname" name="fname" placeholder="First name (required)" required>
+        <input type="text" id="lname" name="lname" placeholder="Last name (required)" required>
+        <input type="email" id="email" name="email" placeholder="E-mail (required)" required>
         <input type="tel" id="phone" name="phone" placeholder="Phone">
-        <textarea type="text" id="message" name="message" placeholder="Message" maxlength="400"></textarea>
+        <div class="textarea-container">
+          <textarea type="text" id="message" name="message" placeholder="Message" maxlength="400"></textarea>
+        </div>
       </form>
     {:else if lang == "it"}
       <form action="">
@@ -201,25 +211,29 @@
     position: absolute;
     z-index: 0;
   }
+  swiper-slide {
+    cursor: grab;
+  }
+  swiper-slide:active {
+    cursor: grabbing;
+  }
   swiper-slide>picture.slide>img {
     width: 100%;
     height: 50vh;
     position: relative;
     object-fit: cover;
   }
-  swiper-container::part(bullet) {
+  swiper-container::part(bullet),
+  swiper-container::part(bullet-active) {
     background: transparent;
     border: solid 1px #000;
-    width: 6px;
-    height: 6px;
+    width: 5px;
+    height: 5px;
     opacity: 1;
+    margin: 0 3px;
   }
   swiper-container::part(bullet-active) {
     background: #000;
-    border: solid 1px #000;
-    width: 6px;
-    height: 6px;
-    opacity: 1;
   }
   .swiper-button-prev,
   .swiper-button-next {
@@ -250,10 +264,10 @@
   }
   h2 {
     line-height: 25.2px;
-    max-width: 800px;
+    max-width: 900px;
     text-align: center;
     margin: auto;
-    padding: 100px 0;
+    padding: 100px 20px;
     font-size: 18px;
   }
   section.menu {
@@ -278,6 +292,7 @@
     display: inline-block;
     transition: var(--transition);
     transition-property: transform;
+    /* font-family: 'GoodSans-Regular'; */
   }
   h3.open>span {
     transform: rotate(180deg);
@@ -288,7 +303,7 @@
   .menuContentChild {
     border-top: solid 1px #000;
     margin: auto;
-    padding: 40px 0;
+    padding: 40px calc(var(--gutter)*2);
     box-sizing: border-box;
     line-height: 18px;
     display: grid;
@@ -301,7 +316,7 @@
     width: 100%;
     z-index: 2;
     background-color: #F7F5E5;
-    padding-bottom: 56px;
+    padding-bottom: var(--footerHeight);
   }
   #preFooter>div,
   #preFooter>div>picture {
@@ -349,8 +364,9 @@
     padding: var(--gutter) calc(var(--gutter)*1.75);
     font-size: 18px;
     line-height: 25.2px;
+    max-width: 900px;
   }
-  input, textarea {
+  input {
     margin: 0;
     padding: var(--gutter) calc(var(--gutter)*1.75);
     font-size: 18px;
@@ -361,10 +377,27 @@
     border-top: solid 1px #000;
     background-color: #F7F5E5;
     color: #000;
-    font-family: 'GoodSans-Regular';
+    /* font-family: 'GoodSans-Regular'; */
     font-weight: 400;
   }
-  textarea{
+  .textarea-container {
+    margin: 0;
+    width: 100%;
+    border-top: solid 1px #000;
+    background-color: #F7F5E5;
+  }
+  textarea {
+    max-width: 900px;
+    margin: 0;
+    padding: var(--gutter) calc(var(--gutter)*1.75);
+    width: calc(100% - var(--gutter)*3.5);
+    border: none;
+    background-color: #F7F5E5;
+    color: #000;
+    font-family: 'GoodSans-Regular', Arial, Helvetica, sans-serif;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 25.2px;
     min-height: 150px;
     resize: none;
   }
@@ -386,6 +419,83 @@
     right: calc(var(--gutter)*1.75);
     bottom: 0%;
     cursor: pointer;
-    margin-bottom: 56px;
+    margin-bottom: calc(var(--footerHeight) + var(--gutter)*2);
+  }
+  .mobileOnly {
+    display: none !important;
+  }
+
+
+  
+  @media only screen and (max-width: 600px) {
+    .logo {
+      top: calc(var(--gutter)*3.5);
+      width: 70vw;
+      left: 15vw;
+    }
+    h2 {
+      padding: 85px 20px;
+    }
+    h3 {
+      padding: 85px 20px;
+    }
+    section.slider {
+      height: auto;
+    }
+    section.slider>picture {
+      display: none;
+    }
+    swiper-container {
+      width: 100%;
+      height: auto;
+      padding: 0;
+      position: relative;
+      left: 0;
+      top: 0;
+      padding: calc(var(--gutter)*3) 0;
+      overflow: auto;
+    }
+    swiper-slide {
+      width: 100%;
+    }
+    swiper-slide>picture {
+      width: calc(100% - var(--gutter)*6);
+      padding: 0 calc(var(--gutter)*3);
+      display: block;
+    }
+    swiper-slide>picture.slide>img {
+      height: auto;
+      aspect-ratio: 2/3;
+    }
+    .caption {
+      font-size: 14px;
+      line-height: 18px;
+      margin-top: calc(var(--gutter)*2);
+      padding-bottom: calc(var(--gutter)*2.5);
+    }
+    .desktopOnly {
+      display: none !important;
+    }
+    .mobileOnly {
+      display: block !important;
+    }
+    #cta {
+      flex-direction: column;
+      gap: 60px;
+    }
+    input, textarea {
+      padding: calc(var(--gutter)*2.75) calc(var(--gutter)*1.75);
+    }
+    textarea{
+      border-bottom: solid 1px #000;
+      margin-bottom: 20px;
+    }
+    #submit {
+      position: relative;
+      margin-bottom: 0;
+      right: unset;
+      display: block;
+      margin: auto;
+    }
   }
 </style>

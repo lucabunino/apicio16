@@ -8,6 +8,10 @@ export default {
       title: 'Contatti',
       options: { columns: 2 },
     },
+    {
+      name: 'media',
+      options: { columns: 2 },
+    },
   ],
   fields: [
     {
@@ -66,6 +70,13 @@ export default {
       name: 'footerImage',
       title: 'Immagine footer',
       type: 'image',
+      fieldset: 'media',
+    },
+    {
+      name: 'footerImageMobile',
+      title: 'Immagine footer mobile',
+      type: 'image',
+      fieldset: 'media',
     },
     {
       name: 'description',
