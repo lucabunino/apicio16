@@ -342,7 +342,7 @@
       opacity: 0;
     }
     ul {
-      top: calc(var(--gutter)/2);
+      top: calc(var(--gutter));
       right: calc(var(--gutter)*1.5);
     }
     footer {

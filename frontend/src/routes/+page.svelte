@@ -159,7 +159,6 @@
         <input type="email" id="email" name="email" placeholder="E-mail (required)" required>
         <input type="tel" id="phone" name="phone" placeholder="Phone">
         <div class="textarea-container">
-          THIS IS A TEST
           <textarea type="text" id="message" name="message" placeholder="Message" maxlength="400"></textarea>
         </div>
       </form>
@@ -169,7 +168,9 @@
         <input type="text" id="lname" name="lname" placeholder="Cognome (obbligatorio)">
         <input type="email" id="email" name="email" placeholder="E-mail (obbligatorio)">
         <input type="tel" id="phone" name="phone" placeholder="Telefono">
-        <textarea type="text" id="message" name="message" placeholder="Messaggio" maxlength="400"></textarea>
+        <div class="textarea-container">
+          <textarea type="text" id="message" name="message" placeholder="Message" maxlength="400"></textarea>
+        </div>
       </form>
     {/if}
   </div>
