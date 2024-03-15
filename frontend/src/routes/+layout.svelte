@@ -188,7 +188,7 @@
         <a class="" target="_blank" href="{data.siteSettings[0].facebookLink}">{data.siteSettings[0].facebook}</a>
       {/if}
       {#if data.siteSettings[0].phone}
-        <a class="" target="_blank" href="callto:{data.siteSettings[0].phone}">{data.siteSettings[0].phone}</a>
+        <a class="" target="_blank" href="tel:{data.siteSettings[0].phone.replace(/\s/g, '')}">{data.siteSettings[0].phone}</a>
       {/if}
     </div>
   </footer>
