@@ -1,26 +1,10 @@
 @font-face {
   font-family: 'GoodSans-Regular';
-  src: url('./fonts/GTFGoodSansTRIAL-Regular.otf') format("opentype");
+  src: url('./fonts/GoodSans-Regular.eot');
   src: local('☺︎'),
-    url("./fonts/GTFGoodSansTRIAL-Regular.otf") format("opentype"),
-  }
-@media screen and (max-device-width: 480px) {
-  @font-face {
-    font-family: 'GoodSans-Regular';
-    src: url('./fonts/GTFGoodSansTRIAL-Regular.otf') format("opentype");
-}}
-
-@font-face {
-  font-family: 'GoodSans-RegularItalic';
-  src: url('./fonts/GTFGoodSansTRIAL-RegularItalic.otf') format("opentype");
-  src: local('☺︎'),
-    url("./fonts/GTFGoodSansTRIAL-RegularItalic.otf") format("opentype"),
-  }
-@media screen and (max-device-width: 480px) {
-  @font-face {
-    font-family: 'GoodSans-RegularItalic';
-    src: url('./fonts/GTFGoodSansTRIAL-RegularItalic.otf') format("opentype");
-}}
+    url("./fonts/GoodSans-Regular.woff") format("woff"),
+    url("./fonts/GoodSans-Regular.woff2") format("woff2"),
+}
 
 :root {
   --gutter: 12px;

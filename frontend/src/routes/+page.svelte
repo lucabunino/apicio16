@@ -5,6 +5,8 @@
   import {PortableText} from '@portabletext/svelte'
   import portableTextStyle from '../components/portableTextStyle.svelte';
   export let data: PageData;
+  // export let form;
+  // console.log(form);
 
   // import function to register Swiper custom elements
   import { register } from 'swiper/element/bundle';
@@ -64,7 +66,13 @@
 		Object.assign(swiperEl, swiperParams);
 		swiperEl.initialize();
 	});
+  function formPrint() {
+    alert("This form is currently offline")
+    // alert("Form submitted: " + form?.fname + " " + form?.lname + " " + form?.email)
+	}
 </script>
+
+<svelte:window/>
 
 {#if data.homepage}
   {#each data.homepage[0].contents as block}
@@ -153,7 +161,7 @@
   <div id="form">
     <p>{#if lang == "en"}Get in touch with us by filling out the contact form, and we'll get back to you as soon as possible.{:else if lang == "it"}Mettiti in contatto con noi compilando il modulo di contatto e ti risponderemo il prima possibile.{/if}</p>
     {#if lang == "en"}
-      <form action="">
+      <form action="" method="POST">
         <input type="text" id="fname" name="fname" placeholder="First name (required)" required>
         <input type="text" id="lname" name="lname" placeholder="Last name (required)" required>
         <input type="email" id="email" name="email" placeholder="E-mail (required)" required>
@@ -161,6 +169,7 @@
         <div class="textarea-container">
           <textarea type="text" id="message" name="message" placeholder="Message" maxlength="400"></textarea>
         </div>
+        <button on:click={formPrint} id="submit" type="submit" class="btn" href="/menu">{#if lang == "en"}Submit{:else if lang == "it"}Invia{/if}</button>
       </form>
     {:else if lang == "it"}
       <form action="">
@@ -171,10 +180,10 @@
         <div class="textarea-container">
           <textarea type="text" id="message" name="message" placeholder="Message" maxlength="400"></textarea>
         </div>
+        <button id="submit" type="submit" class="btn" href="/menu">{#if lang == "en"}Submit{:else if lang == "it"}Invia{/if}</button>
       </form>
     {/if}
   </div>
-  <button id="submit" class="btn" href="/menu">{#if lang == "en"}Submit{:else if lang == "it"}Invia{/if}</button>
 </section>
 
 <style lang="css">
@@ -359,14 +368,14 @@
     background-color: #F7F5E5;
   }
   #form {
-    background-color: #FFAF22;
+    /* background-color: #FFAF22; */
   }
   #form>p {
     margin: 0;
     padding: var(--gutter) calc(var(--gutter)*1.75);
     font-size: 18px;
     line-height: 25.2px;
-    max-width: 900px;
+    background-color: #FFAF22;
   }
   input {
     margin: 0;
@@ -422,7 +431,7 @@
     right: calc(var(--gutter)*1.75);
     bottom: 0%;
     cursor: pointer;
-    margin-bottom: calc(var(--footerHeight) + var(--gutter)*2);
+    margin-bottom: calc(var(--gutter)*2);
   }
   .mobileOnly {
     display: none !important;
@@ -494,12 +503,16 @@
       margin-bottom: 20px;
     }
     #submit {
-      position: relative;
+      /* position: relative;
       margin-bottom: 0;
       right: unset;
       display: block;
-      margin: auto;
+      margin: auto; */
+      position: relative;
       margin-bottom: var(--gutter);
+      right: unset;
+      left: 50%;
+      transform: translateX(-50%);
     }
   }
 </style>
