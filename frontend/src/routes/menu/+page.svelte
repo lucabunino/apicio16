@@ -328,5 +328,8 @@
     .dishes {
       padding: 36px calc(var(--gutter)*2) 18px;
     }
+    .meal>div:hover>h2 {
+      color: #000;
+    }
   }
 </style>
