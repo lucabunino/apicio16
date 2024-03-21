@@ -135,12 +135,12 @@
     {#if ready}
       <section class="meal" in:menuEnter={{delay: 800 + i*50, duration: 1000}} out:menuLeave={{delay: i*50, duration: 800}}>
           <div class={open == content ? 'open' : ''} on:click={openMeal(content)} style:height={innerWidth > 600 ? `${mealHeight}px` : '180px'}>
-            <h2 class={open == content ? 'open' : ''} >{content.meal[lang]} <span>↓</span></h2>
+            <h2 class={open == content ? 'open' : ''} >{content.meal[lang]} <span>&#8595;</span></h2>
           </div>
           {#if open === content}
             <div class="course" transition:slide={{duration: 200, easing: quadInOut}}>
               {#each content.mealContent as meal}
-                <h3 class={openDishes.has(meal) ? 'open' : ''} on:click={() => { toggleDish(meal); open == content; }}>{meal.course[lang]} <span>↓</span></h3>
+                <h3 class={openDishes.has(meal) ? 'open' : ''} on:click={() => { toggleDish(meal); open == content; }}>{meal.course[lang]} <span>&#8595;</span></h3>
                 {#if openDishes.has(meal)}
                 <div transition:slide={{duration: 200, easing: quadInOut}}>
                   <div class="dishes">
@@ -197,6 +197,7 @@
     padding-top: calc(var(--gutter)*6 + 8vw);
   }
   .meal {
+    display: -ms-grid;
     display: grid;
     border-top: solid 1px #000;
     position: relative;
@@ -204,10 +205,14 @@
   .meal:last-of-type {
     border-bottom: solid 1px #000;
     margin-bottom: var(--footerHeight);
-    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+            box-sizing: border-box;
   }
   .meal>div{
-    align-items: center;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    display: -ms-grid;
     display: grid;
     cursor: pointer;
   }
@@ -222,13 +227,21 @@
   h2>span,
   h3>span {
     display: inline-block;
+    -webkit-transition: var(--transition);
+    -o-transition: var(--transition);
     transition: var(--transition);
+    -webkit-transition-property: -webkit-transform;
+    transition-property: -webkit-transform;
+    -o-transition-property: transform;
     transition-property: transform;
+    transition-property: transform, -webkit-transform;
     /* font-family: 'GoodSans-Regular'; */
   }
   h2.open>span,
   h3.open>span {
-    transform: rotate(180deg);
+    -webkit-transform: rotate(180deg);
+        -ms-transform: rotate(180deg);
+            transform: rotate(180deg);
     /* font-family: 'GoodSans-Regular'; */
   }
   .meal>div:hover>h2 {
@@ -262,11 +275,13 @@
     padding: 57px calc(var(--gutter)*2) 27px;
     border-top: solid 1px #000;
     text-align: center;
+    display: -ms-grid;
     display: grid;
   }
   .dish {
     max-width: 640px;
-    justify-self: center;
+    -ms-grid-column-align: center;
+        justify-self: center;
     margin-top: 36px;
   }
   .dish:first-of-type {
@@ -298,6 +313,8 @@
     height: 1px;
     background-color: #000;
     width: 100%;
+    -webkit-transition: all ease-in-out .6s;
+    -o-transition: all ease-in-out .6s;
     transition: all ease-in-out .6s;
   }
 

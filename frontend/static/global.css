@@ -12,7 +12,7 @@
 }
 
 html {
-  font-family: 'GoodSans-Regular', Arial, Helvetica, sans-serif;
+  font-family: GoodSans-Regular, Arial, Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
   color: var(--lightgray);
   background-color: var(--black);
@@ -23,6 +23,11 @@ body {
   scroll-behavior: smooth;
   margin: 0;
   color: #000;
-  background-color: #F7F5E5;
   background-color: #FFAF22;
 }
+button:link{color:inherit}
+button:active{color:inherit}
+button:visited{color:inherit}
+a:link{color:inherit}
+a:active{color:inherit}
+a:visited{color:inherit}

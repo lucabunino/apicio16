@@ -105,7 +105,7 @@
         <h2>{block.text[lang]}</h2>
       {/if}
       {#if block.menuTitle}
-        <h3 on:click={openMenu} class:open>{block.menuTitle[lang]} <span>↓</span></h3>
+        <h3 on:click={openMenu} class:open>{block.menuTitle[lang]} <span>&#8595;</span></h3>
           <div class="menuContent">
             {#if open}
               <div transition:slide={{duration: 200, easing: quadInOut}}>
@@ -209,17 +209,25 @@
   section.media>picture>img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    -o-object-fit: cover;
+       object-fit: cover;
   }
   section.slider {
     width: 100%;
     max-height: 100vh;
     background-color: #F7F5E5;
+    display: -ms-grid;
     display: grid;
+    -ms-grid-columns: (1fr)[2];
     grid-template-columns: repeat(2, 1fr);
-    align-content: center;
-    align-items: center;
-    justify-content: center;
+    -ms-flex-line-pack: center;
+        align-content: center;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
     justify-items: center;
   }
   section.slider>picture {
@@ -231,7 +239,8 @@
     width: 100%;
     height: 100%;
     position: relative;
-    object-fit: cover;
+    -o-object-fit: cover;
+       object-fit: cover;
     display: block;
   }
   swiper-container {
@@ -241,22 +250,30 @@
     z-index: 0;
   }
   swiper-slide {
+    cursor: -webkit-grab;
     cursor: grab;
   }
   swiper-slide:active {
+    cursor: -webkit-grabbing;
     cursor: grabbing;
   }
   swiper-slide>picture.slide {
+    display: -ms-grid;
     display: grid;
   }
   swiper-slide>picture.slide>img {
     aspect-ratio: 2/3;
     max-width: 100%;
     max-height: 75vh;
-    object-fit: cover;
-    object-position: center;
-    align-self: center;
-    justify-self: center;
+    -o-object-fit: cover;
+       object-fit: cover;
+    -o-object-position: center;
+       object-position: center;
+    -ms-flex-item-align: center;
+        -ms-grid-row-align: center;
+        align-self: center;
+    -ms-grid-column-align: center;
+        justify-self: center;
   }
   swiper-container::part(button-prev),
   swiper-container::part(button-next) {
@@ -331,12 +348,20 @@
   }
   h3>span {
     display: inline-block;
+    -webkit-transition: var(--transition);
+    -o-transition: var(--transition);
     transition: var(--transition);
+    -webkit-transition-property: -webkit-transform;
+    transition-property: -webkit-transform;
+    -o-transition-property: transform;
     transition-property: transform;
+    transition-property: transform, -webkit-transform;
     /* font-family: 'GoodSans-Regular'; */
   }
   h3.open>span {
-    transform: rotate(180deg);
+    -webkit-transform: rotate(180deg);
+        -ms-transform: rotate(180deg);
+            transform: rotate(180deg);
   }
   .menuContent {
     text-align: center;
@@ -345,10 +370,14 @@
     border-top: solid 1px #000;
     margin: auto;
     padding: 40px calc(var(--gutter)*2);
-    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+            box-sizing: border-box;
     line-height: 18px;
+    display: -ms-grid;
     display: grid;
-    justify-content: center;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
   }
   #preFooter {
     z-index: 2;
@@ -365,19 +394,27 @@
     height: auto;
     position: relative;
   }
+  #preFooter>div>picture {
+    background-color: #FFAF22;
+  }
   #preFooter>div>picture>img {
     width: 100%;
     height: 100%;
     vertical-align: bottom;
-    object-fit: cover;
+    -o-object-fit: cover;
+       object-fit: cover;
   }
   #cta {
     position: absolute;
     top: 50%;
     left: 50%;
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
     width: auto;
-    transform: translateX(-50%) translateY(-50%);
+    -webkit-transform: translateX(-50%) translateY(-50%);
+        -ms-transform: translateX(-50%) translateY(-50%);
+            transform: translateX(-50%) translateY(-50%);
     gap: var(--gutter);
   }
   .btn {
@@ -393,6 +430,8 @@
     width: 200px;
     letter-spacing: -0.01em;
     border: none;
+    font-family: GoodSans-Regular, Arial, Helvetica, sans-serif;
+    font-weight: 400;
   }
   .btn:hover {
     background-color: #F7F5E5;
@@ -406,7 +445,7 @@
     font-size: 18px;
     line-height: 25.2px;
     background-color: #FFAF22;
-    border-top: solid 1px #FFAF22;
+    vertical-align: top;
   }
   input {
     margin: 0;
@@ -452,6 +491,22 @@
   textarea:focus, input:focus{
     outline: none;
   }
+  ::-webkit-input-placeholder {
+    color: #000;
+    opacity: 1; /* Firefox */
+  }
+  ::-moz-placeholder {
+    color: #000;
+    opacity: 1; /* Firefox */
+  }
+  :-ms-input-placeholder {
+    color: #000;
+    opacity: 1; /* Firefox */
+  }
+  ::-ms-input-placeholder {
+    color: #000;
+    opacity: 1; /* Firefox */
+  }
   ::placeholder {
     color: #000;
     opacity: 1; /* Firefox */
@@ -495,6 +550,7 @@
     }
     section.slider {
       height: auto;
+      -ms-grid-columns: (1fr)[1];
       grid-template-columns: repeat(1, 1fr);
     }
     section.slider>picture {
@@ -539,7 +595,10 @@
       display: block !important;
     }
     #cta {
-      flex-direction: column;
+      -webkit-box-orient: vertical;
+      -webkit-box-direction: normal;
+          -ms-flex-direction: column;
+              flex-direction: column;
       gap: 60px;
     }
     input, textarea {
@@ -559,7 +618,9 @@
       margin-bottom: var(--gutter);
       right: unset;
       left: 50%;
-      transform: translateX(-50%);
+      -webkit-transform: translateX(-50%);
+          -ms-transform: translateX(-50%);
+              transform: translateX(-50%);
     }
   }
 </style>

@@ -181,7 +181,7 @@
       </a>
     {/if}
     {#if data.siteSettings[0].mail}
-      <a class="maps" target="_blank" href="{data.siteSettings[0].mapsLink}">{data.siteSettings[0].maps} <span>↗</span></a>
+      <a class="maps" target="_blank" href="{data.siteSettings[0].mapsLink}">{data.siteSettings[0].maps} <span>&#8599;</span></a>
     {/if}
     <div>
       {#if data.siteSettings[0].facebook}
@@ -242,7 +242,9 @@
   .logo.menu.noTransition {
     transition: none;
   }
-  #languageSwitch {
+  #languageSwitch,
+  #languageSwitch>button {
+    color: #000;
     font-size: 12px;
   }
   ul {
