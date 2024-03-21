@@ -134,7 +134,7 @@
   {#each data.menu[0].menuContents as content, i (content)}
     {#if ready}
       <section class="meal" in:menuEnter={{delay: 800 + i*50, duration: 1000}} out:menuLeave={{delay: i*50, duration: 800}}>
-          <div on:click={openMeal(content)} style:height={innerWidth > 600 ? `${mealHeight}px` : '180px'}>
+          <div class={open == content ? 'open' : ''} on:click={openMeal(content)} style:height={innerWidth > 600 ? `${mealHeight}px` : '180px'}>
             <h2 class={open == content ? 'open' : ''} >{content.meal[lang]} <span>↓</span></h2>
           </div>
           {#if open === content}
@@ -211,6 +211,9 @@
     display: grid;
     cursor: pointer;
   }
+  .meal>div.open{
+    background-color: #F7F5E5;
+  }
   h2 {
     text-align: center;
     font-weight: 400;
@@ -228,9 +231,11 @@
     transform: rotate(180deg);
     /* font-family: 'GoodSans-Regular'; */
   }
-  .meal>div:hover>h2,
-  h2.open {
+  .meal>div:hover>h2 {
     color: #F7F5E5;
+  }
+  .meal>div.open:hover>h2 {
+    color: #000;
   }
   .course {
     background-color: #F7F5E5;

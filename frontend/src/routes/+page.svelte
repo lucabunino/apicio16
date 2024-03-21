@@ -5,8 +5,8 @@
   import {PortableText} from '@portabletext/svelte'
   import portableTextStyle from '../components/portableTextStyle.svelte';
   export let data: PageData;
-  // export let form;
-  // console.log(form);
+  export let form;
+  import { enhance } from '$app/forms';  
 
   // import function to register Swiper custom elements
   import { register } from 'swiper/element/bundle';
@@ -34,10 +34,7 @@
 			slidesPerView: 1,
 			loop: true,
 			simulateTouch: true,
-			// navigation: {
-			// 	nextEl: '.swiper-button-next',
-			// 	prevEl: '.swiper-button-prev',
-			// },
+			navigation: true,
 			pagination: {
         bullets: true,
         clickable: true,
@@ -59,17 +56,21 @@
 				600: {
 					
 				},
-			},			
+			},	
+      injectStyles: [
+        `
+        .swiper-button-next>svg,
+        .swiper-button-prev>svg {
+          display:none;
+        }
+        `,
+      ],		
 		};
 
 		// now we need to assign all parameters to Swiper element
 		Object.assign(swiperEl, swiperParams);
 		swiperEl.initialize();
 	});
-  function formPrint() {
-    alert("This form is currently offline")
-    // alert("Form submitted: " + form?.fname + " " + form?.lname + " " + form?.email)
-	}
 </script>
 
 <svelte:window/>
@@ -77,17 +78,6 @@
 {#if data.homepage}
   {#each data.homepage[0].contents as block}
     <section class={block.kind}>
-      {#if block.image}
-        <picture>
-          <img
-          src={urlFor(block.image).url()}
-          alt="Fullscreen of Apicio16"
-          />
-        </picture>
-      {/if}
-      {#if block.text}
-        <h2>{block.text[lang]}</h2>
-      {/if}
       {#if block.sliderImages}
       <swiper-container init="false">
         {#each block.sliderImages as sliderImage}
@@ -102,8 +92,17 @@
           </swiper-slide>
         {/each}
       </swiper-container>
-      <!-- <div class="swiper-button-prev"></div>
-      <div class="swiper-button-next"></div> -->
+      {/if}
+      {#if block.image}
+        <picture>
+          <img
+          src={urlFor(block.image).url()}
+          alt="Fullscreen of Apicio16"
+          />
+        </picture>
+      {/if}
+      {#if block.text}
+        <h2>{block.text[lang]}</h2>
       {/if}
       {#if block.menuTitle}
         <h3 on:click={openMenu} class:open>{block.menuTitle[lang]} <span>↓</span></h3>
@@ -161,15 +160,37 @@
   <div id="form">
     <p>{#if lang == "en"}Get in touch with us by filling out the contact form, and we'll get back to you as soon as possible.{:else if lang == "it"}Mettiti in contatto con noi compilando il modulo di contatto e ti risponderemo il prima possibile.{/if}</p>
     {#if lang == "en"}
-      <form action="" method="POST">
-        <input type="text" id="fname" name="fname" placeholder="First name (required)" required>
-        <input type="text" id="lname" name="lname" placeholder="Last name (required)" required>
-        <input type="email" id="email" name="email" placeholder="E-mail (required)" required>
-        <input type="tel" id="phone" name="phone" placeholder="Phone">
+      <form
+      action="?/create"
+      method="POST"
+      use:enhance
+      >
+        <input type="text" id="fname" name="fname" value={form?.fname ?? ''} placeholder="First name (required)" required>
+        <input type="text" id="lname" name="lname" value={form?.lname ?? ''} placeholder="Last name (required)" required>
+        <input type="email" id="email" name="email" value={form?.email ?? ''} placeholder="E-mail (required)" required>
+        <input type="tel" id="phone" name="phone" value={form?.phone ?? ''} placeholder="Phone">
         <div class="textarea-container">
           <textarea type="text" id="message" name="message" placeholder="Message" maxlength="400"></textarea>
         </div>
-        <button on:click={formPrint} id="submit" type="submit" class="btn" href="/menu">{#if lang == "en"}Submit{:else if lang == "it"}Invia{/if}</button>
+        <button id="submit" type="submit" class="btn" href="/menu">
+          {#if lang === "en"}
+            {#if form?.success}
+              Message submitted
+            {:else if form?.success == false}
+              Something went wrong, retry!
+            {:else}
+              Submit
+            {/if}
+          {:else if lang === "it"}
+            {#if form?.success}
+              Messaggio inviato
+            {:else if form?.success == false}
+              Qualcosa è andato storto, riprova!
+            {:else}
+              Invia
+            {/if}
+          {/if}
+        </button>
       </form>
     {:else if lang == "it"}
       <form action="">
@@ -204,22 +225,32 @@
     object-fit: cover;
   }
   section.slider {
-    height: 100vh;
+    width: 100%;
+    max-height: 100vh;
     background-color: #F7F5E5;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+    justify-items: center;
+  }
+  section.slider>picture {
+    width: 100%;
+    height: 100%;
+    display: block;
   }
   section.slider>picture>img {
-    width: 50%;
+    width: 100%;
     height: 100%;
-    position: absolute;
-    right: 0;
+    position: relative;
     object-fit: cover;
+    display: block;
   }
   swiper-container {
-    width: 25%;
-    height: 60vh;
-    left: 12.5%;
-    top: 20vh;
-    position: absolute;
+    width: 25vw;
+    height: auto;
+    position: relative;
     z-index: 0;
   }
   swiper-slide {
@@ -228,11 +259,35 @@
   swiper-slide:active {
     cursor: grabbing;
   }
+  swiper-slide>picture.slide {
+    display: grid;
+  }
   swiper-slide>picture.slide>img {
-    width: 100%;
-    height: 50vh;
-    position: relative;
+    aspect-ratio: 2/3;
+    max-width: 100%;
+    max-height: 75vh;
     object-fit: cover;
+    object-position: center;
+    align-self: center;
+    justify-self: center;
+  }
+  swiper-container::part(button-prev),
+  swiper-container::part(button-next) {
+    opacity: 1;
+    top: 0;
+    margin: 0;
+    width: 50%;
+    max-width: 12.5vw;
+    height: calc(25vw/2*3);
+    max-height: 75vh;
+  }
+  swiper-container::part(button-prev) {
+    left: 0;
+    cursor: w-resize;
+  }
+  swiper-container::part(button-next) {
+    right: 0;
+    cursor: e-resize;
   }
   swiper-container::part(bullet),
   swiper-container::part(bullet-active) {
@@ -246,21 +301,9 @@
   swiper-container::part(bullet-active) {
     background: #000;
   }
-  .swiper-button-prev,
-  .swiper-button-next {
-    position: absolute;
-    height: 50vh;
-    width: 12.5%;
-    top: 15vh;
-    z-index: 2;
-    opacity: 0;
-    cursor: pointer;
-  }
-  .swiper-button-prev {
-    left: 12.5%;
-  }
-  .swiper-button-next {
-    left: 25%;
+  swiper-container::part(pagination) {
+    margin-top: var(--gutter);
+    position: relative;
   }
   .caption {
     font-size: 12px;
@@ -376,6 +419,7 @@
     font-size: 18px;
     line-height: 25.2px;
     background-color: #FFAF22;
+    border-top: solid 1px #FFAF22;
   }
   input {
     margin: 0;
@@ -390,6 +434,7 @@
     color: #000;
     font-family: 'GoodSans-Regular', Arial, Helvetica, sans-serif;
     font-weight: 400;
+    border-radius: 0;
   }
   .textarea-container {
     margin: 0;
@@ -412,6 +457,10 @@
     line-height: 25.2px;
     min-height: 150px;
     resize: none;
+    border-radius: 0;
+  }
+  input[type="search"] {
+    -webkit-appearance: none;
   }
   textarea:focus, input:focus{
     outline: none;
@@ -436,6 +485,19 @@
   .mobileOnly {
     display: none !important;
   }
+  #form-message {
+    display: block;
+    position: absolute;
+    left: 0;
+    font-size: 13px;
+  }
+  #form-message.success {
+    background-color: #FFAF22;
+  }
+  #form-message.fail {
+    background-color: #000;
+    color: #FFF;
+  }
 
 
   
@@ -453,6 +515,7 @@
     }
     section.slider {
       height: auto;
+      grid-template-columns: repeat(1, 1fr);
     }
     section.slider>picture {
       display: none;
@@ -479,11 +542,15 @@
       height: auto;
       aspect-ratio: 2/3;
     }
+    swiper-container::part(button-prev),
+    swiper-container::part(button-next) {
+      display: none;
+    }
     .caption {
       font-size: 14px;
       line-height: 18px;
       margin-top: calc(var(--gutter)*2);
-      padding-bottom: calc(var(--gutter)*2.5);
+      /* padding-bottom: calc(var(--gutter)*2.5); */
     }
     .desktopOnly {
       display: none !important;

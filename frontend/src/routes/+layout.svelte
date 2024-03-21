@@ -345,6 +345,10 @@
       top: calc(var(--gutter));
       right: calc(var(--gutter)*1.5);
     }
+    #languageSwitch,
+    #languageSwitch>button {
+      font-size: 15px;
+    }
     footer {
       padding: calc(var(--gutter)*2) 0;
       width: 100%;
