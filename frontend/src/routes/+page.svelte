@@ -159,51 +159,38 @@
   </div>
   <div id="form">
     <p>{#if lang == "en"}Get in touch with us by filling out the contact form, and we'll get back to you as soon as possible.{:else if lang == "it"}Mettiti in contatto con noi compilando il modulo di contatto e ti risponderemo il prima possibile.{/if}</p>
-    {#if lang == "en"}
-      <form
-      action="?/create"
-      method="POST"
-      use:enhance
-      >
-        <input type="text" id="fname" name="fname" value={form?.fname ?? ''} placeholder="First name (required)" required>
-        <input type="text" id="lname" name="lname" value={form?.lname ?? ''} placeholder="Last name (required)" required>
-        <input type="email" id="email" name="email" value={form?.email ?? ''} placeholder="E-mail (required)" required>
-        <input type="tel" id="phone" name="phone" value={form?.phone ?? ''} placeholder="Phone">
-        <div class="textarea-container">
-          <textarea type="text" id="message" name="message" placeholder="Message" maxlength="400"></textarea>
-        </div>
-        <button id="submit" type="submit" class="btn" href="/menu">
-          {#if lang === "en"}
-            {#if form?.success}
-              Message submitted
-            {:else if form?.success == false}
-              Something went wrong, retry!
-            {:else}
-              Submit
-            {/if}
-          {:else if lang === "it"}
-            {#if form?.success}
-              Messaggio inviato
-            {:else if form?.success == false}
-              Qualcosa è andato storto, riprova!
-            {:else}
-              Invia
-            {/if}
+    <form
+    action="?/create"
+    method="POST"
+    use:enhance
+    >
+      <input type="text" id="fname" name="fname" value={form?.fname ?? ''} placeholder={lang == "en" ? `First name (required)` : 'Nome (obbligatorio)'} required>
+      <input type="text" id="lname" name="lname" value={form?.lname ?? ''} placeholder={lang == "en" ? `Last name (required)` : 'Cognome (obbligatorio)'} required>
+      <input type="email" id="email" name="email" value={form?.email ?? ''} placeholder={lang == "en" ? `E-mail (required)` : 'E-mail (obbligatorio)'} required>
+      <input type="tel" id="phone" name="phone" value={form?.phone ?? ''} placeholder={lang == "en" ? `Phone` : 'Numero di telefono'}>
+      <div class="textarea-container">
+        <textarea type="text" id="message" name="message" placeholder={lang == "en" ? `Message` : 'Messaggio'} maxlength="400"></textarea>
+      </div>
+      <button id="submit" type="submit" class="btn" href="/menu">
+        {#if lang === "en"}
+          {#if form?.success}
+            Message submitted
+          {:else if form?.success == false}
+            Something went wrong, retry!
+          {:else}
+            Submit
           {/if}
-        </button>
-      </form>
-    {:else if lang == "it"}
-      <form action="">
-        <input type="text" id="fname" name="fname" placeholder="Nome (obbligatorio)">
-        <input type="text" id="lname" name="lname" placeholder="Cognome (obbligatorio)">
-        <input type="email" id="email" name="email" placeholder="E-mail (obbligatorio)">
-        <input type="tel" id="phone" name="phone" placeholder="Telefono">
-        <div class="textarea-container">
-          <textarea type="text" id="message" name="message" placeholder="Message" maxlength="400"></textarea>
-        </div>
-        <button id="submit" type="submit" class="btn" href="/menu">{#if lang == "en"}Submit{:else if lang == "it"}Invia{/if}</button>
-      </form>
-    {/if}
+        {:else if lang === "it"}
+          {#if form?.success}
+            Messaggio inviato
+          {:else if form?.success == false}
+            Qualcosa è andato storto, riprova!
+          {:else}
+            Invia
+          {/if}
+        {/if}
+      </button>
+    </form>
   </div>
 </section>
 
@@ -485,19 +472,12 @@
   .mobileOnly {
     display: none !important;
   }
-  #form-message {
+  /* #form-message {
     display: block;
     position: absolute;
     left: 0;
     font-size: 13px;
-  }
-  #form-message.success {
-    background-color: #FFAF22;
-  }
-  #form-message.fail {
-    background-color: #000;
-    color: #FFF;
-  }
+  } */
 
 
   
