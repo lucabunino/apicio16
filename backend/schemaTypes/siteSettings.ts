@@ -40,8 +40,8 @@ export default {
       })
     },
     {
-      name: 'facebook',
-      title: 'Facebook',
+      name: 'instagramLink',
+      title: 'Link Instagram',
       type: 'string',
       fieldset: 'contacts',
     },

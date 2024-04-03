@@ -183,14 +183,19 @@
     {#if data.siteSettings[0].mail}
       <a class="maps" target="_blank" href="{data.siteSettings[0].mapsLink}">{data.siteSettings[0].maps} <span>&#8599;</span></a>
     {/if}
-    <div>
-      {#if data.siteSettings[0].facebook}
-        <a class="" target="_blank" href="{data.siteSettings[0].facebookLink}">{data.siteSettings[0].facebook}</a>
-      {/if}
-      {#if data.siteSettings[0].phone}
-        <a class="" target="_blank" href="tel:{data.siteSettings[0].phone.replace(/\s/g, '')}">{data.siteSettings[0].phone}</a>
-      {/if}
-    </div>
+    {#if data.siteSettings[0].phone}
+      <a class="phone" target="_blank" href="tel:{data.siteSettings[0].phone.replace(/\s/g, '')}">{data.siteSettings[0].phone}</a>
+    {/if}
+    {#if data.siteSettings[0].facebookLink}
+      <a class="facebookLink" target="_blank" href="{data.siteSettings[0].facebookLink}">FB</a>
+    {/if}
+    {#if data.siteSettings[0].instagramLink}
+      <a class="instagramLink" target="_blank" href="{data.siteSettings[0].instagramLink}">IG</a>
+    {/if}
+    {#if data.siteSettings[0].mail}
+      <a class="mail" target="_blank" href="{data.siteSettings[0].mail}">{data.siteSettings[0].mail}</a>
+    {/if}
+    <div class="flexDivider"></div>
   </footer>
 {/if}
 
@@ -283,48 +288,66 @@
     width: calc(100% - var(--gutter)*1.75*2);
     z-index: 2;
     display: flex;
+    column-gap: var(--gutter);
     flex-wrap: wrap;
     justify-content: space-between;
     padding: calc(var(--gutter)*.75) calc(var(--gutter)*1.75);
-    font-size: 12px;
+    font-size: 14px;
     text-transform: uppercase;
   }
-  footer.menu {
-    /* border-top: solid 1px #000; */
-  }
-  footer > a, footer > div > a {
+  footer > a {
     color: #000;
   }
-  footer > a:hover, footer > div > a:hover {
+  footer > a:hover {
     opacity: .7;
   }
-  footer > div {
-    display: flex;
-    gap: var(--gutter);
-  }  
+  .phone {
+    margin-right: auto;
+  }
   a.menuItem {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
   }
-  span {
-    /* font-family: 'GoodSans-Regular'; */
+  .flexDivider {
+    display: none;
+    margin: 0;
+    padding: 0;
   }
   
-  @media only screen and (max-width: 900px) {
+  @media only screen and (max-width: 1000px) {
     footer {
       justify-content: center;
     }
-    a.maps {
-      margin-right: var(--gutter);
-    }
     a.menuItem {
       position: relative;
-      margin-bottom: 1em;
+      margin-bottom: 2em;
       text-align: center;
       left: unset;
       transform: none;
       width: 100%;
+    }
+    .maps {
+      order: 1;
+    }
+    .phone {
+      order: 5;
+      margin: 0;
+    }
+    .facebookLink {
+      order: 2;
+    }
+    .instagramLink {
+      order: 3;
+    }
+    .mail {
+      order: 6;
+    }
+    .flexDivider {
+      display: block;
+      order: 4;
+      width: 0;
+      flex-basis: 100%;
     }
   }
   
@@ -350,18 +373,6 @@
     #languageSwitch,
     #languageSwitch>button {
       font-size: 15px;
-    }
-    footer {
-      padding: calc(var(--gutter)*2) 0;
-      width: 100%;
-      flex-direction: column;
-      text-align: center;
-      align-items: center;
-      font-size: 13px;
-      line-height: 17px;
-    }
-    a.menuItem {
-      margin-bottom: 2em;
     }
   }
 

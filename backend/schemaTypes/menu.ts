@@ -69,7 +69,7 @@ export default {
                       type: "array",
                       of: [
                         {
-                          name: "dish",
+                          name: "singleDish",
                           type: "object",
                           icon: CircleIcon,
                           fields: [
