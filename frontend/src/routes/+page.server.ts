@@ -25,8 +25,8 @@ export const actions = {
       `;
 
       const mail = {
-        from: GOOGLE_EMAIL,
-        to: "luca.bunino@gmail.com",
+        from: EMAIL,
+        to: EMAIL,
         text: body,
         html: html,
       };

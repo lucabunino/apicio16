@@ -5,6 +5,7 @@
   import { quartInOut } from 'svelte/easing';
   import Loader from '../components/loader.svelte'; // Or whatever your component path is
 	import { beforeNavigate, afterNavigate } from '$app/navigation';
+  import {urlFor} from '$lib/utils/image';
 
   $: scrollY = ""
   $: delayed = false;
@@ -137,7 +138,23 @@
     await tick();
     calculateFooterHeight();
   });
+
+  console.log(data);
 </script>
+
+<svelte:head>
+  <title>Apicio16 – gourmet restaurant</title>
+  <meta name="description" content="Our gourmet restaurant, offering a journey that unearths those cherished fragments nestled in our minds since the dawn of time.">
+  <link rel="canonical" href={$page.url}>
+  <meta name="robots" content="index,follow">
+  <meta name="googlebot" content="index,follow">
+  <meta property="og:title" content={data.siteSettings[0].title}>
+  <meta property="og:description" content={data.siteSettings[0].description.lang}>
+  <meta property="og:image" content={urlFor(data.siteSettings[0].SEOImage).width(2000).url()}>
+  <meta property="og:url" content={$page.url}>
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content={data.siteSettings[0].title}>
+</svelte:head>
 
 <svelte:window bind:scrollY={scrollY} on:resize={calculateFooterHeight, handleResize}/>
 

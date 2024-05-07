@@ -13,11 +13,15 @@ export default {
       options: { columns: 2 },
     },
   ],
+  groups: [
+    {name: 'SEO'},
+  ],
   fields: [
     {
       name: 'title',
       title: 'Titolo',
       type: 'string',
+      group: 'SEO'
     },
     {
       name: 'logo',
@@ -82,6 +86,7 @@ export default {
       name: 'description',
       title: 'Descrizione',
       type: 'object',
+      group: 'SEO',
       fields: [
         {
           title: "Italiano",
@@ -94,6 +99,12 @@ export default {
           type: 'text'
         }
       ]
+    },
+    {
+      name: 'SEOImage',
+      title: 'Immagine SEO (condivisione sui social)',
+      type: 'image',
+      group: 'SEO'
     },
   ]
 }

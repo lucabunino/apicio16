@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { PageData } from './$types';
+  
   import {urlFor} from '$lib/utils/image';
   import { onMount } from 'svelte';
   import {PortableText} from '@portabletext/svelte'
