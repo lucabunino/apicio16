@@ -1,5 +1,5 @@
 import nodemailer from "nodemailer";
-import { EMAIL_SERVER, EMAIL, EMAIL_PASSWORD, EMAIL_SERVER, EMAIL_PORT } from "$env/static/private";
+import { EMAIL, EMAIL_PASSWORD, EMAIL_SERVER, EMAIL_PORT } from "$env/static/private";
 
 let transporter = nodemailer.createTransport({
   host: EMAIL_SERVER,

@@ -138,8 +138,6 @@
     await tick();
     calculateFooterHeight();
   });
-
-  console.log(data);
 </script>
 
 <svelte:head>
