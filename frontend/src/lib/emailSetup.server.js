@@ -4,7 +4,7 @@ import { EMAIL, EMAIL_PASSWORD, EMAIL_SERVER, EMAIL_PORT } from "$env/static/pri
 let transporter = nodemailer.createTransport({
   host: EMAIL_SERVER,
   port: EMAIL_PORT,
-  secure: false,
+  secure: true,
   auth: {
     user: EMAIL,
     pass: EMAIL_PASSWORD,

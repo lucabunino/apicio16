@@ -1,5 +1,5 @@
 import { fail } from "@sveltejs/kit"
-import { GOOGLE_EMAIL } from "$env/static/private";
+import { EMAIL } from "$env/static/private";
 import transporter from "$lib/emailSetup.server.js";
 
 export const actions = {
@@ -26,22 +26,10 @@ export const actions = {
 
       const mail = {
         from: EMAIL,
-        to: EMAIL,
+        to: "hello@lucabunino.com",
         text: body,
         html: html,
       };
-
-      // if (fname.length < 2) {
-      //   return fail(400, {
-      //     error: true,
-      //     alert: 'Name must be at least two characters.',
-      //     fname,
-      //     lname,
-      //     email,
-      //     phone,
-      //     message
-      //   })
-      // }
 
       const sendEmail = async (mail) => {
         await new Promise((resolve, reject) => {
@@ -68,24 +56,3 @@ export const actions = {
     };
   },
 };
-
-
-
-
-
-
-
-// TO BE USED IN PAGE.SVELTE
-
-// use:enhance={({ formElement, formData, action }) => {
-//   // Before form submission to server
-//   console.log(formElement);
-//   console.log(formData);
-//   console.log(action);
-//   return async ({ result, update }) => {
-//     // After form submission to server
-//     if (result.type === 'success') {
-//       formElement.reset();
-//     }
-//   };
-// }}
