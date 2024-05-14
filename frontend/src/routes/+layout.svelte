@@ -218,7 +218,7 @@
       <a class="instagramLink" target="_blank" href="{data.siteSettings[0].instagramLink}">IG</a>
     {/if}
     {#if data.siteSettings[0].mail}
-      <a class="mail" target="_blank" href="{data.siteSettings[0].mail}">{data.siteSettings[0].mail}</a>
+      <a class="mail" target="_blank" href="mailto:{data.siteSettings[0].mail}">{data.siteSettings[0].mail}</a>
     {/if}
     <div class="flexDivider"></div>
   </footer>
