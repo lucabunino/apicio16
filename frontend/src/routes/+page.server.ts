@@ -25,8 +25,8 @@ export const actions = {
       `;
 
       const mail = {
-        from: EMAIL,
-        to: "hello@lucabunino.com",
+        from: GOOGLE_EMAIL,
+        to: "fb@palazzovelabro.it",
         text: body,
         html: html,
       };
