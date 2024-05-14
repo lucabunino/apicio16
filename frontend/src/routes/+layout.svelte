@@ -158,7 +158,7 @@
 
 
 
-{#if $page.url == 'http://www.apicio16.it'}
+{#if $page.url == 'https://apicio16.it/'}
 <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh;height: 100dvh;">
   <div style="width: 200px">
     {@html svgContentBlack}
