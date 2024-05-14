@@ -1,5 +1,5 @@
 import { fail } from "@sveltejs/kit"
-import { EMAIL } from "$env/static/private";
+import { EMAIL, GOOGLE_EMAIL } from "$env/static/private";
 import transporter from "$lib/emailSetup.server.js";
 
 export const actions = {
