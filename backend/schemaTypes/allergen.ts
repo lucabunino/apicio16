@@ -22,9 +22,19 @@ export default {
       type: "localeText",
     },
   ],
+  orderings: [
+    {
+      title: 'Number',
+      name: 'number',
+      by: [
+        {field: 'number', direction: 'asc'}
+      ]
+    },
+  ],
   preview: {
     select: {
       title: 'title.it',
+      subtitle: 'number',
     },
   }
 }

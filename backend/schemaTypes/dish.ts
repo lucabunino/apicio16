@@ -40,6 +40,32 @@ export default {
   preview: {
     select: {
       title: 'title.it',
+      description: 'description.it',
+      price: 'price',
     },
-  }
+    prepare(selection) {
+      const {title, description, price} = selection
+      const p = price ? price + ' | ' : ''
+      return {
+        title: title,
+        subtitle: p + description,
+      }
+    }
+  },
+  orderings: [
+    {
+      title: 'Title',
+      name: 'title',
+      by: [
+        {field: 'title.it', direction: 'asc'}
+      ]
+    },
+    {
+      title: 'Price',
+      name: 'price',
+      by: [
+        {field: 'price', direction: 'asc'}
+      ]
+    },
+  ],
 }

@@ -1,6 +1,3 @@
-import type { PortableTextBlock } from '@portabletext/types';
-import type { ImageAsset, Slug } from '@sanity/types';
-
 import { createClient } from '@sanity/client';
 import groq from 'groq';
 
@@ -13,7 +10,7 @@ if (!PUBLIC_SANITY_PROJECT_ID || !PUBLIC_SANITY_DATASET) {
 export const client = createClient({
 	projectId: PUBLIC_SANITY_PROJECT_ID,
 	dataset: PUBLIC_SANITY_DATASET,
-	useCdn: false, // `false` if you want to ensure fresh data
+	useCdn: true, // `false` if you want to ensure fresh data
 	apiVersion: '2024-03-09' // date of setup
 });
 
@@ -35,7 +32,7 @@ export async function getSiteSettings(): Promise<Settings[]> {
 
 export async function getMenu(): Promise<Settings[]> {
 	return await client.fetch(
-		groq`*[_type == "menu"] {
+		groq`*[_type == "menu" && !(_id in path('drafts.**'))]{
 			title,
 			from,
 			to,
@@ -55,33 +52,9 @@ export async function getMenu(): Promise<Settings[]> {
 							}
 						}
 					}
-				}
+				},
+				mealNotes,
 			}
 		} | order(year desc)`
 	);
 }
-
-
-
-
-
-// export interface Work {
-// 	thumbnailFeatured: any;
-// 	featured: Boolean;
-// 	thumbnailHover: any;
-// 	thumbnail: any;
-// 	_type: 'work';
-// 	_createdAt: string;
-// 	year: string;
-// 	title?: string;
-// 	slug: Slug;
-// 	excerpt?: string;
-// 	mainImage?: ImageAsset;
-// 	body: PortableTextBlock[];
-// 	media: any;
-// 	artDirection: string;
-// 	client: any;
-// 	service: any;
-// 	linkLabel: string;
-// 	linkValue: string;
-// }

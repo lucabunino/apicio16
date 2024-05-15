@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { PageData } from './$types';
+  
   import { slide } from 'svelte/transition';
   import { quadInOut } from 'svelte/easing';
   import { quartInOut } from 'svelte/easing';
@@ -49,14 +50,13 @@
 	}
 
   import { language } from "../language";
-    import Layout from '../+layout.svelte';
-  let lang: string;
+  import Layout from '../+layout.svelte';
+  let lang: string;  
 	language.subscribe((language) => {
 		lang = language;
-	}); 
+	});
   
   export let data: PageData;
-  console.log(data);
 
   let open: string | null = null;
   let openDishes = new Set();
@@ -99,22 +99,32 @@
     openDishes = new Set(openDishes);
   }
   
-  let allAllergens: Allergen[] = [];
-  // Collect all allergens from the data
-  data.menu.forEach(menu => {
+let allAllergens: Allergen[] = [];
+// Collect all allergens from the data
+data.menu.forEach(menu => {
+  if (menu && menu.menuContents) {
     menu.menuContents.forEach(content => {
-      content.mealContent.forEach(meal => {
-        meal.dishes.forEach(dish => {
-          dish.dishReference.allergens.forEach(allergen => {
-            if (!allAllergens.some(a => a.number === allergen.number)) {
-              allAllergens.push(allergen);
-            }
-          });
+      if (content && content.mealContent) {
+        content.mealContent.forEach(meal => {
+          if (meal && meal.dishes) {
+            meal.dishes.forEach(dish => {
+              if (dish && dish.dishReference && dish.dishReference.allergens) {
+                dish.dishReference.allergens.forEach(allergen => {
+                  if (!allAllergens.some(a => a.number === allergen.number)) {
+                    allAllergens.push(allergen);
+                  }
+                });
+              }
+            });
+          }
         });
-      });
+      }
     });
-  });
-  console.log(allAllergens);
+  }
+});
+console.log(allAllergens);
+allAllergens.sort((a, b) => a.number - b.number);
+console.log(allAllergens);
   
   
   $: innerWidth = 0
@@ -146,16 +156,16 @@
                   <div class="dishes">
                     {#each meal.dishes as dish}
                       <div class="dish">
-                        {#if dish.dishReference.title[lang]}
-                          <h4>{dish.dishReference.title[lang]}
-                            {#if dish.dishReference.allergens.length > 0}
+                        {#if dish.dishReference.title}
+                          <h4>{dish.dishReference.title[lang] ? dish.dishReference.title[lang] : dish.dishReference.title['it']}
+                            {#if dish.dishReference.allergens}
                               {#each dish.dishReference.allergens as allergene}
                                 <sup>{allergene.number}{#if dish.dishReference.allergens.indexOf(allergene) < dish.dishReference.allergens.length - 1}–{/if}</sup>
                               {/each}
                             {/if}
                           </h4>
                         {/if}
-                        {#if dish.dishReference.description[lang]}
+                        {#if dish.dishReference.description}
                           <p class="dishDescription">{dish.dishReference.description[lang]}</p>
                         {/if}
                         {#if dish.dishReference.price}
@@ -163,17 +173,26 @@
                         {/if}
                       </div>
                     {/each}
-                    {#if allAllergens}
+                    {#if meal.dishes.some(dish => dish.dishReference && dish.dishReference.allergens && dish.dishReference.allergens.length > 0)}
                       <p class="allergens">
-                        {#each allAllergens as allergen}
-                          <span>{allergen.number}–{allergen.title[lang]}: {allergen.description[lang]}</span>
+                        <span><strong>{lang == 'it' ? 'Il nostro staff è a disposizione per maggiori informazioni in caso di allergie ed intolleranze' : 'For further information about allergens in our dishes, please ask our staff'}</strong></span>
+                        <br>                    
+                        {#each allAllergens as allergen, i (allergen)}
+                          <span>
+                            {#if i > 0}, {/if}{allergen.number}–{allergen.title[lang]}{#if allergen.description}: {allergen.description[lang]}{/if}
+                          </span>
                         {/each}
+                        <br>
+                        <span>{lang == 'it' ? 'Il pesce servito crudo è stato sottoposto ad abbattimento rapido (Reg.CE 853/04)' : 'Our fresh fishery products has been blast chilled (Reg.CE 853/04)'}</span>
                       </p>
                     {/if}
                   </div>
                 </div>
                 {/if}
               {/each}
+            {#if content.mealNotes}
+              <p class="notes">{content.mealNotes[lang]}</p>
+            {/if}
             </div>
           {/if}
       </section>
@@ -307,7 +326,13 @@
     padding: 0 calc(var(--gutter)*1.75);
   }
   .allergens>span {
-    display: block;
+    /* display: block; */
+  }
+  .notes {
+    font-weight: 400;
+    border-top: solid 1px #000;
+    padding: calc(var(--gutter)* 1.25) calc(var(--gutter)* 1.75);
+    cursor: default;
   }
   .menuContentDivider {
     height: 1px;

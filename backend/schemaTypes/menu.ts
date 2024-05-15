@@ -97,6 +97,11 @@ export default {
                 },
               ],
             },
+            {
+              name: 'mealNotes',
+              title: "Note sul pasto",
+              type: 'localeString',
+            },
           ],
           preview: {
             select: {
