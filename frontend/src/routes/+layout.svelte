@@ -4,7 +4,7 @@
   import { page, navigating } from '$app/stores';
   import { quartInOut } from 'svelte/easing';
   import Loader from '../components/loader.svelte'; // Or whatever your component path is
-	import { beforeNavigate, afterNavigate } from '$app/navigation';
+	import { beforeNavigate } from '$app/navigation';
   import {urlFor} from '$lib/utils/image';
 
   $: scrollY = ""

@@ -6,7 +6,7 @@
   import { quartInOut } from 'svelte/easing';
   import { onMount } from 'svelte';
 	import { onDestroy } from 'svelte';
-  import { beforeNavigate, afterNavigate } from '$app/navigation';
+  import { beforeNavigate } from '$app/navigation';
 
   $: footerH = ""
   import { footerHeight } from "../footerHeight";
@@ -73,14 +73,12 @@
   function openMeal(content: string) {
     if (openDishes.size != 0) {
       if (open === content) {
-        console.log("close with delay");
         openDishes = null;
         openDishes = new Set(openDishes);
         setTimeout(() => {
           open = null;
         }, 200);
       } else {
-        console.log("open with delay");
         openDishes = null;
         openDishes = new Set(openDishes);
         setTimeout(() => {
@@ -89,11 +87,9 @@
       }
     } else {
       if (open === content) {
-        console.log("close");
         open = null;
         openDishes = new Set(openDishes);
       } else {
-        console.log("open");
         open = content;
       }
     }
@@ -131,9 +127,7 @@ data.menu.forEach(menu => {
     });
   }
 });
-console.log(allAllergens);
 allAllergens.sort((a, b) => a.number - b.number);
-console.log(allAllergens);
   
   
   $: innerWidth = 0
@@ -141,13 +135,9 @@ console.log(allAllergens);
 
   let gutter = 12;
   const allergenNumbers = new Set<string>();
-  
-  function calculate(event) {
-		console.log(gutter*6 + innerWidth/100*8);
-	}
 </script>
 
-<svelte:window bind:innerWidth bind:innerHeight on:resize={calculate}/>
+<svelte:window bind:innerWidth bind:innerHeight/>
 
 <div id="meals">
   {#each data.menu[0].menuContents as content, i (content)}

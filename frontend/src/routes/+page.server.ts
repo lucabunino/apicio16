@@ -1,4 +1,3 @@
-import { fail } from "@sveltejs/kit"
 import { EMAIL, GOOGLE_EMAIL } from "$env/static/private";
 import transporter from "$lib/emailSetup.server.js";
 
