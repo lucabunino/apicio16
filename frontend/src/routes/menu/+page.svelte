@@ -19,8 +19,17 @@
   onMount(() => {
 		ready = true;
     footerHeight.set(footerH);
+    const links = document.querySelectorAll('a');
+    links.forEach(link => {
+        link.addEventListener('click', handleClick);
+    });
 	});
-	onDestroy(() => ready = false);
+  function handleClick(event) {
+    open = null
+  }
+	onDestroy(() => {
+    ready = false;
+  });
   beforeNavigate(() => {
 		ready = false;
 	});
