@@ -141,7 +141,7 @@
 </script>
 
 <svelte:head>
-  <title>Apicio16 – gourmet restaurant</title>
+  <title>{data.siteSettings[0].title}</title>
   <meta name="description" content="Our gourmet restaurant, offering a journey that unearths those cherished fragments nestled in our minds since the dawn of time.">
   <link rel="canonical" href={$page.url}>
   <meta name="robots" content="index,follow">
