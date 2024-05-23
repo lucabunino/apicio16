@@ -443,8 +443,8 @@
   .btn:hover {
     background-color: #F7F5E5;
   }
-  #form {
-    /* background-color: #FFAF22; */
+  #preFooter>#form {
+    height: auto;
   }
   #form>p {
     margin: 0;
@@ -525,11 +525,10 @@
     width: auto;
     padding-left: 39px;
     padding-right: 39px;
-    position: absolute;
-    right: calc(var(--gutter)*1.75);
-    bottom: 0%;
+    position: relative;
+    margin: 0 calc(var(--gutter)*1.75) calc(var(--gutter)*2) auto;
     cursor: pointer;
-    margin-bottom: calc(var(--gutter)*2);
+    display: block;
   }
   .mobileOnly {
     display: none !important;
@@ -624,13 +623,9 @@
       margin-bottom: 20px;
     }
     #submit {
-      /* position: relative;
-      margin-bottom: 0;
-      right: unset;
-      display: block;
-      margin: auto; */
       position: relative;
-      margin-bottom: var(--gutter);
+      margin: 0;
+      margin-bottom: calc(var(--gutter)*6);
       right: unset;
       left: 50%;
       -webkit-transform: translateX(-50%);
