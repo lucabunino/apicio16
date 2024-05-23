@@ -200,14 +200,6 @@ allAllergens.sort((a, b) => a.number - b.number);
 </div>
 
 <style lang="css">
-  #bg {
-    z-index: -2;
-    background-color: #FFAF22;
-    width: 100vw;
-    height: 100%;
-    top: 0;
-    position: fixed;
-  }
   h1, h2, h3, h4, h5, p{
     margin: 0;
   }

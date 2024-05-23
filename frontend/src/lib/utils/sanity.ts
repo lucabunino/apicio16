@@ -30,6 +30,22 @@ export async function getSiteSettings(): Promise<Settings[]> {
 	);
 }
 
+export async function getPrivacyPolicy(): Promise<PrivacyPolicy[]> {
+	return await client.fetch(
+		groq`*[_type == "siteSettings"]{
+			privacyPolicy,
+			}`
+	);
+}
+
+export async function getCookiePolicy(): Promise<CookiePolicy[]> {
+	return await client.fetch(
+		groq`*[_type == "siteSettings"]{
+			cookiePolicy,
+			}`
+	);
+}
+
 export async function getMenu(): Promise<Settings[]> {
 	return await client.fetch(
 		groq`*[_type == "menu" && !(_id in path('drafts.**'))]{

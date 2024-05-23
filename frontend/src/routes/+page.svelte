@@ -193,6 +193,11 @@
       </button>
     </form>
   </div>
+  <div id="utilities">
+    <p>Restaurant of <a href="https://www.palazzovelabro.it/" target="_blank">Palazzo Velabro</a></p>
+    <p><a href="/privacy">Privacy</a>&nbsp;&nbsp;&nbsp;<a href="/cookie-policy">Cookie policy</a></p>
+    <p>©{new Date().getFullYear()} Apicio 16, All rights reserved</p>
+  </div>
 </section>
 
 <style lang="css">
@@ -392,7 +397,7 @@
   #preFooter>div,
   #preFooter>div>picture {
     display: block;
-    height: auto;
+    height: 100vh;
     position: relative;
   }
   #preFooter>div>picture {
@@ -402,6 +407,7 @@
     width: 100%;
     height: 100%;
     vertical-align: bottom;
+    object-position: bottom;
     -o-object-fit: cover;
        object-fit: cover;
   }
@@ -528,12 +534,20 @@
   .mobileOnly {
     display: none !important;
   }
-  /* #form-message {
-    display: block;
-    position: absolute;
-    left: 0;
-    font-size: 13px;
-  } */
+  #utilities {
+    height: auto !important;
+    text-align: center;
+    margin-bottom: calc(var(--gutter)*2);
+  }
+  #utilities>p {
+    margin: 0;
+  }
+  #utilities>p>a {
+    text-decoration: none;
+  }
+  #utilities>p>a:hover {
+    opacity: .7;
+  }
 
 
   

@@ -1,13 +1,13 @@
 // src/routes/+page.js
-import { getMenu } from '$lib/utils/sanity';
+import { getPrivacyPolicy } from '$lib/utils/sanity';
 import { error } from '@sveltejs/kit';
 import type { PageLoad } from './$types';
 
 export const load:any = (async () => {
-	const menu = await getMenu();
-	if (menu) {
+	const privacyPolicy = await getPrivacyPolicy();
+	if (privacyPolicy) {
 		return {
-			menu,
+			privacyPolicy,
 		};
 	}
 	throw error(404, 'Not found');

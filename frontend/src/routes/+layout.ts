@@ -17,14 +17,3 @@ export const load:any = (async ({ url }) => {
 	}
   throw error(404, 'Not found');
 }) satisfies PageLoad;
-
-
-// export const load:any = (async () => {
-// 	const siteSettings = await getSiteSettings();
-// 	if (siteSettings) {
-// 		return {
-// 			siteSettings,
-// 		};
-// 	}
-// 	throw error(404, 'Not found');
-// }) satisfies PageLoad;

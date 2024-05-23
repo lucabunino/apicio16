@@ -13,7 +13,7 @@
   $: resizeTimeout = "";
 
   beforeNavigate(() => {
-    if ($page.url.pathname === "/menu") {
+    if ($page.url.pathname === "/menu" || $page.url.pathname === "/cookie-policy" || $page.url.pathname === "/privacy") {
       delayed = false;
     } else {
       delayed = true;
@@ -169,10 +169,10 @@
 {#if languageChecked}
   <header>
     {#if data.siteSettings[0].logo}
-      <a class="logo" href="/" aria-current={$page.url.pathname === '/'} class:off="{$page.url.pathname === "/menu"}" class:reset={$navigating} class:noTransition={noTransition} style={$page.url.pathname === "/menu" ? `transform: translateY(-${scrollY}px)` : ''}>
+      <a class="logo" href="/" aria-current={$page.url.pathname === '/'} class:off="{$page.url.pathname === "/menu" || $page.url.pathname === "/cookie-policy" || $page.url.pathname === "/privacy"}" class:reset={$navigating} class:noTransition={noTransition} style={$page.url.pathname === "/menu" ? `transform: translateY(-${scrollY}px)` : ''}>
         {@html svgContentYellow}
       </a>
-      <a class="logo menu" href="/" aria-current={$page.url.pathname === '/about'} class:on="{$page.url.pathname === "/menu"}" class:reset={$navigating} class:noTransition={noTransition} style={$page.url.pathname === "/menu" ? `transform: translateY(-${scrollY}px)` : ''}>
+      <a class="logo menu" href="/" class:on="{$page.url.pathname === "/menu" || $page.url.pathname === "/cookie-policy" || $page.url.pathname === "/privacy"}" class:reset={$navigating} class:noTransition={noTransition} style={$page.url.pathname === "/menu" ? `transform: translateY(-${scrollY}px)` : ''}>
         {@html svgContentBlack}
       </a>
     {/if}
