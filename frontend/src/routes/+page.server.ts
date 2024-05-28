@@ -1,4 +1,4 @@
-import { EMAIL, GOOGLE_EMAIL } from "$env/static/private";
+import { EMAIL } from "$env/static/private";
 import transporter from "$lib/emailSetup.server.js";
 
 export const actions = {
@@ -24,7 +24,7 @@ export const actions = {
       `;
 
       const mail = {
-        from: GOOGLE_EMAIL,
+        from: EMAIL,
         to: "fb@palazzovelabro.it",
         text: body,
         html: html,
