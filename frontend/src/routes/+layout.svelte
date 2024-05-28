@@ -156,16 +156,6 @@
 
 <svelte:window bind:scrollY={scrollY} on:resize={calculateFooterHeight, handleResize}/>
 
-
-
-{#if $page.url == 'https://apicio16.it/'}
-<div style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh;height: 100dvh;">
-  <div style="width: 200px">
-    {@html svgContentBlack}
-  </div>
-  <h4>Coming soon</h4>
-</div>
-{:else}
 {#if languageChecked}
   <header>
     {#if data.siteSettings[0].logo}
@@ -222,7 +212,6 @@
     {/if}
     <div class="flexDivider"></div>
   </footer>
-{/if}
 {/if}
 
 <style lang="css">

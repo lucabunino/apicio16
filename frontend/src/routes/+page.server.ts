@@ -26,6 +26,7 @@ export const actions = {
       const mail = {
         from: EMAIL,
         to: "fb@palazzovelabro.it",
+        subject: "Apicio 16 - Form request",
         text: body,
         html: html,
       };
