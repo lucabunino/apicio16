@@ -89,7 +89,9 @@
               alt="Halfscreen of Apicio16"
               />
             </picture>
-            <p class="caption">{sliderImage.sliderCaption[lang]}</p>
+            {#if sliderImage.sliderCaption && sliderImage.sliderCaption[lang] != undefined}
+              <p class="caption">{sliderImage.sliderCaption[lang]}</p>
+            {/if}
           </swiper-slide>
         {/each}
       </swiper-container>
