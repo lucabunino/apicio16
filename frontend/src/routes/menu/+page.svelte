@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { PageData } from './$types';
   
+  
   import { slide } from 'svelte/transition';
   import { quadInOut } from 'svelte/easing';
   import { quartInOut } from 'svelte/easing';
@@ -66,6 +67,8 @@
 	});
   
   export let data: PageData;
+  console.log(data);
+  
 
   let open: string | null = null;
   let openDishes = new Set();
@@ -102,33 +105,7 @@
       openDishes.add(meal);
     }
     openDishes = new Set(openDishes);
-  }
-  
-let allAllergens: Allergen[] = [];
-// Collect all allergens from the data
-data.menu.forEach(menu => {
-  if (menu && menu.menuContents) {
-    menu.menuContents.forEach(content => {
-      if (content && content.mealContent) {
-        content.mealContent.forEach(meal => {
-          if (meal && meal.dishes) {
-            meal.dishes.forEach(dish => {
-              if (dish && dish.dishReference && dish.dishReference.allergens) {
-                dish.dishReference.allergens.forEach(allergen => {
-                  if (!allAllergens.some(a => a.number === allergen.number)) {
-                    allAllergens.push(allergen);
-                  }
-                });
-              }
-            });
-          }
-        });
-      }
-    });
-  }
-});
-allAllergens.sort((a, b) => a.number - b.number);
-  
+  }  
   
   $: innerWidth = 0
 	$: innerHeight = 0
@@ -176,7 +153,7 @@ allAllergens.sort((a, b) => a.number - b.number);
                       <p class="allergens">
                         <span><strong>{lang == 'it' ? 'Il nostro staff è a disposizione per maggiori informazioni in caso di allergie ed intolleranze' : 'For further information about allergens in our dishes, please ask our staff'}</strong></span>
                         <br>                    
-                        {#each allAllergens as allergen, i (allergen)}
+                        {#each data.allergens as allergen, i}
                           <span>
                             {#if i > 0}, {/if}{allergen.number}–{allergen.title[lang]}{#if allergen.description}: {allergen.description[lang]}{/if}
                           </span>

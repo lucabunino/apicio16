@@ -46,7 +46,7 @@ export async function getCookiePolicy(): Promise<CookiePolicy[]> {
 	);
 }
 
-export async function getMenu(): Promise<Settings[]> {
+export async function getMenu(): Promise<Menu[]> {
 	return await client.fetch(
 		groq`*[_type == "menu" && !(_id in path('drafts.**'))]{
 			title,
@@ -62,9 +62,7 @@ export async function getMenu(): Promise<Settings[]> {
 							description,
 							price,
 							allergens[]->{
-								number,
-								title,
-								description
+								number
 							}
 						}
 					}
@@ -72,5 +70,14 @@ export async function getMenu(): Promise<Settings[]> {
 				mealNotes,
 			}
 		} | order(year desc)`
+	);
+}
+
+export async function getAllergens(): Promise<Allergens[]> {
+	return await client.fetch(
+		groq`*[_type == "allergen" && !(_id in path('drafts.**'))]{
+			number,
+			title
+		} | order(number asc)`
 	);
 }
