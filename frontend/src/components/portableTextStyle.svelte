@@ -21,20 +21,24 @@
   * {
     max-width: 640px;
   }
+  :global(h4:first-of-type + .marginTop),
   p {
-    margin-top: 0;
+    margin-top: 1em;
     margin-bottom: 0;
   }
-  p.marginTop {
+  h4:first-of-type {
     margin-top: 0;
-    margin-bottom: 36px;
   }
   h4 {
+    margin: 0;
+    margin-top: 36px;
     font-size: 18px;
     line-height: 18px;
     text-transform: uppercase;
     font-weight: 400;
-    margin: 0;
+  }
+  :global(h4 + .marginTop) {
+    margin-top: 0;
   }
   @media only screen and (max-width: 600px) {
     p {

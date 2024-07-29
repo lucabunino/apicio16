@@ -323,6 +323,12 @@
     margin: 0;
     margin-top: calc(var(--gutter)/2);
   }
+  section.menu + section.text,
+  section.menu + section.menu,
+  section.text + section.text,
+  section.text + section.menu {
+    border-top: solid 1px #000;
+  }
   section.text {
     background-color: #FFAF22;
     height: auto;
