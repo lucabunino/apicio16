@@ -7,7 +7,9 @@
   import portableTextStyle from '../components/portableTextStyle.svelte';
   export let data: PageData;
   export let form;
-  import { enhance } from '$app/forms';  
+  import { enhance } from '$app/forms';
+  import { PUBLIC_SANITY_DATASET } from '$env/static/public';
+  import { PUBLIC_SANITY_PROJECT_ID } from '$env/static/public';
 
   // import function to register Swiper custom elements
   import { register } from 'swiper/element/bundle';
@@ -72,6 +74,10 @@
 		Object.assign(swiperEl, swiperParams);
 		swiperEl.initialize();
 	});
+  let getUrlFromId = ref => {
+    const [_file, id, extension] = ref.split('-');
+    return `https://cdn.sanity.io/files/${PUBLIC_SANITY_PROJECT_ID}/${PUBLIC_SANITY_DATASET}/${id}.${extension}`
+  }
 </script>
 
 <svelte:window/>
@@ -80,21 +86,21 @@
   {#each data.homepage[0].contents as block}
     <section class={block.kind}>
       {#if block.sliderImages}
-      <swiper-container init="false">
-        {#each block.sliderImages as sliderImage}
-          <swiper-slide>
-            <picture class="slide">
-              <img
-              src={urlFor(sliderImage.sliderImage).url()}
-              alt="Halfscreen of Apicio16"
-              />
-            </picture>
-            {#if sliderImage.sliderCaption && sliderImage.sliderCaption[lang] != undefined}
-              <p class="caption">{sliderImage.sliderCaption[lang]}</p>
-            {/if}
-          </swiper-slide>
-        {/each}
-      </swiper-container>
+        <swiper-container init="false">
+          {#each block.sliderImages as sliderImage}
+            <swiper-slide>
+              <picture class="slide">
+                <img
+                src={urlFor(sliderImage.sliderImage).url()}
+                alt="Halfscreen of Apicio16"
+                />
+              </picture>
+              {#if sliderImage.sliderCaption && sliderImage.sliderCaption[lang] != undefined}
+                <p class="caption">{sliderImage.sliderCaption[lang]}</p>
+              {/if}
+            </swiper-slide>
+          {/each}
+        </swiper-container>
       {/if}
       {#if block.image}
         <picture>
@@ -103,6 +109,11 @@
           alt="Fullscreen of Apicio16"
           />
         </picture>
+      {/if}
+      {#if block.video && !block.image}
+        <video preload="none" autoplay loop muted="muted" volume="0" playsinline>
+          <source src={getUrlFromId(block.video.asset._ref)} type="video/webm"/>
+        </video>
       {/if}
       {#if block.text}
         <h2>{block.text[lang]}</h2>
@@ -213,6 +224,14 @@
   }
   section.media {
     height: 100vh;
+  }
+  section.media>video {
+    width: 100%;
+    height: 100%;
+    vertical-align: bottom;
+    object-position: bottom;
+    -o-object-fit: cover;
+    object-fit: cover;
   }
   section.media>picture>img {
     width: 100%;
