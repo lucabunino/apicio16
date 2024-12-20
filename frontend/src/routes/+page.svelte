@@ -29,7 +29,7 @@
 
   onMount(() => {
 		// swiper element
-		const swiperEl = document.querySelector('swiper-container');
+    const swiperElements = document.querySelectorAll('swiper-container');
 		
 
 		// swiper parameters
@@ -69,10 +69,10 @@
         `,
       ],		
 		};
-
-		// now we need to assign all parameters to Swiper element
-		Object.assign(swiperEl, swiperParams);
-		swiperEl.initialize();
+    swiperElements.forEach((swiperEl, index) => {
+      Object.assign(swiperEl, swiperParams);
+      swiperEl.initialize();
+    });
 	});
   let getUrlFromId = ref => {
     const [_file, id, extension] = ref.split('-');
