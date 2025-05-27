@@ -186,8 +186,10 @@
     {/if}
     {#if $page.url.pathname === "/"}
       <a class="menuItem" target="" href="/menu">
-        {#if lang == "en"}Today's menu{/if}
-        {#if lang == "it"}Menu del giorno{/if}
+        <!-- {#if lang == "en"}Today's menu{/if}
+        {#if lang == "it"}Menu del giorno{/if} -->
+        {#if lang == "en"}Discover our menus{/if}
+        {#if lang == "it"}Scopri i nostri menù{/if}
       </a>
     {:else}
       <a class="menuItem" target="" href="/">
