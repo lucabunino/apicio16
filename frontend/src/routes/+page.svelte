@@ -168,7 +168,7 @@
     {/if}
     <div id="cta">
       <!-- <a class="btn" href="mailto:{data.siteSettings[0].mail}">{#if lang == "en"}Book a table{:else if lang == "it"}Prenota un tavolo{/if}</a> -->
-	  <a href="https://apicio16.superbexperience.com/" target="_blank" rel="noopener noreferrer">{#if lang == "en"}Book a table{:else if lang == "it"}Prenota un tavolo{/if}</a>
+	  <a class="btn" href="https://apicio16.superbexperience.com/" target="_blank" rel="noopener noreferrer">{#if lang == "en"}Book a table{:else if lang == "it"}Prenota un tavolo{/if}</a>
       <a class="btn" href="/menu">{#if lang == "en"}Read the menu{:else if lang == "it"}Scopri il menù{/if}</a>
     </div>
   </div>
